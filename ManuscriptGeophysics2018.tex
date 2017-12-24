@@ -1,0 +1,631 @@
+% \documentclass[manuscript]{geophysics}
+\documentclass[paper,twocolumn,twoside]{geophysics}
+% \documentclass[paper]{geophysics}
+% \documentclass[paper, revised]{geophysics}
+% \documentclass[manuscript,revised]{geophysics}
+%%fakesection ===    PACKAGES & DEFINITIONS    ===
+% \usepackage{showframe}
+
+%% ~ ADDITIONAL PACKAGES TO GEOPHYSICS.CLS
+\DeclareGraphicsExtensions{.pdf,.png,.jpg}
+\usepackage{color}
+\usepackage{tabularx}
+\usepackage{colortbl}
+\usepackage{booktabs}
+\usepackage[USenglish]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage[T1]{fontenc}
+\usepackage{amssymb, amsmath, amsfonts}
+\usepackage{upquote}
+\usepackage[pdftex, final]{hyperref}
+\hypersetup{allcolors=blue, allbordercolors={0 0 .5}, colorlinks=true}
+
+\usepackage{listings}
+
+% Figure directory
+\renewcommand{\figdir}{./figures}
+\usepackage{xspace}
+\newcommand{\empymod}{\texttt{empymod}\xspace}
+\usepackage[strings]{underscore}
+
+\definecolor{MyGray}{gray}{0.85}
+\newcolumntype{Y}{>{\columncolor{MyGray}\raggedleft\arraybackslash}r}
+\newcolumntype{W}{>{\raggedleft\arraybackslash}r}
+\newcolumntype{A}{>{\columncolor{MyGray}\raggedleft\arraybackslash}X}
+\newcolumntype{B}{>{\raggedleft\arraybackslash}X}
+
+\hyphenation{iso-tro-pic pe-ne-tra-ting}
+
+\newcommand{\rmk}[1]{\textbf{\color{red}{#1}}}
+\newcommand{\mr}[1]{\mathrm{#1}}
+\frenchspacing
+
+\begin{document}
+
+\title{A digital filter designing tool for the Hankel and Fourier transforms in
+potential-, diffusive-, and wavefield modeling}
+
+\renewcommand{\thefootnote}{\fnsymbol{footnote}}
+
+\ms{GEO-2018-????}
+
+\address{
+\footnotemark[1]Instituto Mexicano del Petróleo,
+Eje Central Lázaro Cárdenas Norte 152,
+Col. San Bartolo Atepehuacan C.P. 07730,
+Ciudad de México, México,
+E-mail: \href{mailto:dieter@werthmuller.org}{Dieter@Werthmuller.org};
+\footnotemark[2]Lamont-Doherty Earth Observatory,
+305C Oceanography,
+61 Route 9W, PO Box 1000,
+Palisades NY 10964-8000 US,
+E-mail: \href{mailto:KKey@ldeo.columbia.edu}{KKey@ldeo.columbia.edu};
+\footnotemark[3]TU Delft,
+Building 23,
+Stevinweg 1 / PO-box 5048,
+2628 CN Delft,
+E-mail: \href{mailto:E.C.Slob@tudelft.nl}{E.C.Slob@tudelft.nl}.}
+
+
+\author{%
+Dieter Werthmüller\footnotemark[1], %
+Kerry Key\footnotemark[2], and %
+Evert C.\ Slob\footnotemark[3]%
+}
+
+\footer{}
+\lefthead{Werthmüller et al.}
+\righthead{Digital filter designing tool}
+
+\maketitle
+
+%%fakesection ===    ABSTRACT    ===
+\begin{abstract} % 1-2 sentence(s) each
+%
+% (1) PRINCIPAL OBJECTIVES AND SCOPE OF THE WORK
+  The open-source code \texttt{fdesign} makes it possible to design digital
+  linear filters for the Hankel and Fourier transforms used in potential-,
+  diffusive-, and wavefield modeling. Digital filters can be derived for any
+  electromagnetic method, such as methods in the diffusive limits (DC, CSEM) as
+  well as methods using higher frequency content (GPR, acoustic and elastic
+  wavefields).
+%
+% (2) METHODOLOGY
+  The direct matrix inversion method is used for the derivation of the filter
+  values, and a brute-force inversion is carried out over the defined spacing
+  and shifting values of the filter basis. Included or user-provided
+  theoretical transform pairs are used for the inversion. Alternatively, one
+  can provide 1D subsurface models that will be computed with a precise
+  quadrature method using the EM modeler \texttt{empymod} to generate
+  numerical transform pairs.
+%
+% (3) RESULTS
+  The comparison of the presented 201\,pt filter with previously presented
+  filters shows that it performs better for some standard CSEM cases. The
+  derivation of longer 2001\,pt filter for a GPR example with 250\,MHz centre
+  frequency proves that the filter method works also for wave phenomena, not
+  only for diffusive EM fields.
+%
+% (4) CONCLUSIONS
+  The presented algorithm provides a tool to create problem specific digital
+  filters. Such purpose-built filters can be made shorter and can speed up
+  consecutive  potential-, diffusive-, and wavefield inversions.
+%
+\end{abstract}
+
+\section{Introduction}
+
+Deva Prasad Ghosh proposed in his Ph.D. thesis \citep{PhD.70.Ghosh} a linear
+filter method for the Hankel transform which revolutionized the computational
+modeling of electromagnetic responses in the field of geophysical exploration.
+If you use a code that calculates electromagnetic responses in the
+wavenumber-frequency domain and transforms them to the space-frequency domain
+chances are very high that it uses the \emph{digital linear filter} method
+(DLF). \cite{GP.71.Ghosh} states that the idea is based on suggestions made
+four decades earlier by \cite{PHY.33.Slichter} and \cite{GEO.40.Pekeris}, in
+that ``\emph{the kernel function is dependent only on the layer parameters, and
+  an expression relating it to the field measurements can be obtained by
+mathematical processes.}'' However, until the introduction of DLF by Ghosh
+these suggestions found no widespread use, probably not last because of the
+missing computer power to calculate the filter coefficients. He further states
+that credit goes to his Ph.D. supervisor Otto \cite{BK.68.Koefoed,
+GP.70.Koefoed}, who retook the task of direct interpretational methods with the
+introduction of raised kernel functions. DLF is, as such, an improvement of
+that approach, providing a faster and simpler method.
+
+% \subsection{Review}
+
+The introduction of linear filters to electromagnetic geophysics initiated a
+wealth of investigation, publications, and development of computer programs
+that extended and improved the method. A few dozen articles have been published
+in the 70s and 80s by Ghosh, Koefoed, Das, Anderson, and many others, the vast
+majority of it in the journal \emph{Geophysical Prospecting}.
+%  (see Figure~\ref{fig:authors})
+Another common name of DLF is \emph{fast Hankel transform} (FHT), popular
+because of the similarity of the name to the well known \emph{fast Fourier
+transform} (FFT). The name was introduced, as far as we can see, by
+\cite{GP.79.Johansen} in their article of the same name. However, the name FHT
+can be misleading as it has \emph{Hankel} in the name, but the DLF can also be
+applied to the Fourier transform (and other linear transforms).
+% \begin{figure}[tbp]
+%   \centering
+%   \fbox{\includegraphics[width=10cm]{figures/author-figure}}
+%     \caption{List by year of publications included in the review (year and
+%       first three letters of principal author).}
+%     \label{fig:authors}
+% \end{figure}
+Publications fall broadly into one or several of three categories: (1) new
+methods (application of DLF to new measurement techniques); (2) filter
+improvements (new filters or providing new or improved methods for the
+determination of filter coefficients); and (3) computational tools. The
+following is a brief review of the most relevant publications regarding DLF,
+without claiming completeness.
+
+\subsubsection{(1) New methods}
+
+Ghosh used the method originally for the computation of type curves for
+Schlumberger and Wenner resistivity soundings. He published the main results of
+his thesis the following year in two publications: in \cite{GP.71.Ghosh} he
+derives a resistivity model from given Schlumberger or Wenner sounding curves;
+and in \cite{GP.71.Ghoshb} he provides filters for the inverse operation,
+deriving resistivity sounding curves from a given resistivity model.  The
+method was next applied to electromagnetic soundings with horizontal and
+perpendicular coils \citep{GP.72.Koefoed}, to vertical coplanar coil systems
+\citep{GP.73.Verma}, to dipoles and other two electrode systems
+\citep{GP.74.Das, GP.74.Dasb, GP.80.Das, GEO.94.Sorensen}, and to vertical
+dikes, hence vertical instead of horizontal layers \citep{GEO.75.Niwas}. Whilst
+the first filters were very specific to one type of curves and one type of
+transformation, various publications used the method to get one type curve from
+another type curve \citep{GP.77.Kumar, GP.78.Kumar} or generalized the method
+to be applicable to a wider set of problems \citep{EXG.80.Davis, GXP.81.Das,
+GEO.84.Das, GP.84.ONeill}. Eventually, it passed from pure layered modeling to
+primary-secondary formulations in 3D problems, where DLF is used to compute the
+spatial Fourier-Hankel transforms in a horizontally layered background medium
+and to compute transient responses from frequency domain computations
+\citep{GJI.81.Das, GJI.82.Das, GEO.84.Anderson, GEO.86.Newman,
+MGS.17.Kruglyakov}. Various authors delved into the theory of the method,
+analyzing the oscillating behaviour of the filters and trying to estimate the
+error of DLF \citep{GP.72.Koefoedb, GP.76.Koefoedb, GP.79.Johansen,
+GP.90.Christensen}.
+
+\subsubsection{(2) Filter improvements}
+
+\cite{PhD.70.Ghosh} derived the filter coefficients in the spectral domain by
+dividing the output spectrum by the input spectrum followed by an inverse
+Fourier transform. Improvements to the determination of filter coefficients
+were provided by \cite{EXG.75.ONeill, GEO.77.Nyman, GEO.82.Das}, or
+specifically for the Fourier transform by \cite{GP.86.Nissen}. A direct
+integration method was used by \cite{GP.76.Bichara, GP.78.Bernabini}.
+\cite{GP.79.Koefoed} proposed a Wiener-Hopf least-squares method, which was
+further improved by many authors \citep{GP.82.Guptasarma, GEO.1982.Murakami,
+GP.97.Guptasarma}. \cite{GP.07.Kong} proposes a direct matrix inversion method
+to solve the convolution equation, which requires only the input and output
+sample values. To evaluate the filters he defines the criteria of a good filter
+as one that recovers small or weak wavefields. This method was also used by
+\cite{GEO.09.Key, GEO.12.Key}. Most authors publish filters for the Hankel
+transform with $J_0$ and $J_1$ Bessel functions (or $J_{-1/2}$, $J_{1/2}$ if
+applied to the Fourier sine/cosine transform), as all higher Bessel functions
+can be rewritten to only use these two. \cite{GP.94.Mohsen} is one of the rare
+cases which provides $J_2$ filter weights.
+
+\subsubsection{(3) Codes}
+
+The best known codes are likely the freely available ones by Anderson.
+\cite{USGS.73.Anderson} extends the method to transient responses, applying DLF
+not only to the Hankel transform, but also to the Fourier transform. A
+transient signal can therefore be obtained be applying twice a digital filter
+to the wavenumber-frequency domain calculation. In \cite{USGS.75.Anderson,
+GEO.79.Anderson} he presents improved filters for both Fourier and Hankel
+transforms, introducing measures to significantly speed-up the calculation,
+such as the lagged convolution or using the same abscissae for $J_0$ and $J_1$.
+\cite{TMS.82.Anderson} and the included 801\,pt filter became sort of the
+industry standard, to which subsequent filters were compared. In
+\cite{GEO.89.Anderson} he presents a hybrid solution, permitting to use either
+DLF or quadrature and as such permits to compare the two. Other examples
+include the codes by \cite{GP.75.Johansen}, an interactive system for
+interpretation of resistivity soundings, and a tool to calculate filter
+coefficients by \cite{GP.90.Christensen}. The latter is available upon request
+and was used, for instance, in all the open-source modeling and inversion
+routines of CSIRO in the Amira Project 223 \citep{ASEG.07.Raiche}. \newline
+
+% \subsection{Outline}
+
+All mentioned publications have in common that they were derived for direct
+current methods (DC) or low frequency methods, such as time-domain shallow EM
+methods (TEM), or controlled-source electromagnetics (CSEM), but not for high
+frequency methods such as ground-penetrating radar (GPR). Generally it was even
+thought that the filter method works only in the diffusive limit
+\citep[e.g.,][]{GEO.15.Hunziker}. Also, there is no open-source filter
+designing tool readily available, they are available as a described method
+in articles or as code upon request by the author, if at all. The presented
+algorithm \texttt{fdesign} tries to fill this gap by providing the tools to
+design general or purpose-built filters using the direct matrix inversion
+method. After a brief overview of the methodology, the theory, and the code we
+show examples of its usage, presenting some new filters for both, CSEM and GPR
+data. The algorithm and many more examples of its usage can be found on
+\href{https://github.com/empymod/article-fdesign}{github.com/empymod/article-fdesign}.
+The examples can be used as templates to design new filters.
+
+
+\section{Methodology}
+
+The algorithm \texttt{fdesign} is a filter designing tool using the direct
+matrix inversion method as described by \cite{GP.07.Kong} and based on scripts
+by \cite{GEO.12.Key}. The tool is an add-on to the electromagnetic modeler
+\texttt{empymod} \citep{GEO.17.Werthmuller}, written in Python, and hosted on
+GitHub, which should foster interaction and enable anyone to toy around,
+improve, and extend it. It can be used to derive digital linear filters for the
+Hankel and the Fourier transforms for potential-, diffusive-, and wavefields
+(hence from DC to GPR). Theoretically, it can be used to derive linear filters
+for any linear transform, as long as you feed it with a theoretical, or
+accurately computed, transform pair of the transform. It permits to derive
+filters with the help of theoretical transform pairs or, alternatively, with
+the electromagnetic modeler \texttt{empymod}, using a quadrature method to
+derive accurate curves used for the inversion.
+
+The main points of the method and some differences between it and the methods
+it is based upon are:
+\begin{itemize}
+  \item The algorithm computes many different filters for various spacing and
+    shift values (brute-force).
+  \item \cite{GP.07.Kong, GEO.12.Key} optimize a filter for the $J_0$ filter,
+    and then use the obtained shift and spacing value to calculate the $J_1$
+    values. The presented algorithm can optimize either $J_0$, $J_1$, or both
+    in the optimization process. Five transform-pairs for each $J_0$ and $J_1$,
+    and three transform pairs for each sine and cosine of often used functions
+    are included in the routine, but any other transform pair can be provided
+    as input.
+  \item More complex or more specific models can be provided instead of
+    theoretical transform pairs by using the modeler \texttt{empymod}.
+  \item \cite{GP.07.Kong} defines a \emph{good} filter as one that recovers
+    \emph{weak} diffusive EM fields. In the presented algorithm you can define
+    a relative error level which defines up to what error an obtained result is
+    good or not. The presented algorithm can also minimize the amplitude, but
+    it has additionally another mode, where you maximise the abscissae $r$ of
+    the right-hand-side of the transform pair instead of minimising the
+    amplitude. The two modes yield the same result in the general, simple case
+    of fast decaying transform pairs. However, if you use complex models for
+    the design, and specifically high frequencies, then maximising $r$ will
+    yield much better and more consistent results.
+  \item The algorithm allows to run under-, equal-, and over-determined
+    systems.
+  \item the real or the imaginary part can be used for the inversion of complex
+    transform pairs.
+\end{itemize}
+
+The quality of a filter depends heavily on the model chosen for comparison. An
+obtained filter might be very good for one model, but not that good for another
+one, which is no different for this designing tool. There is no way to estimate
+the error of a result obtained with a certain filter if you apply it to any
+other model, unless you calculate this other model with another method for
+comparison. All results presented here should therefore be taken with a certain
+care.
+
+\subsection{Theory}
+
+Most of the articles mentioned in the review have detailed derivations of the
+digital filter method. In this article we focus on the algorithm, and summarize
+the theory only very briefly by following \cite{GEO.12.Key} (equations
+(2)-(6)). In electromagnetics we often have to evaluate integrals of the form
+%
+\begin{equation}
+  F(r) = \int^\infty_0 f(l)K(l r)\mr{d}l \ ,
+  \label{eq:HankelInt}
+\end{equation}
+%
+where $l$ and $r$ denote left-hand-side and right-hand-side evaluation values,
+and $K$ is the kernel function. In the specific case of the Hankel transform
+$l$ corresponds to wavenumber, $r$ to offset, and $K$ to Bessel functions; in
+the case of the Fourier transform $l$ corresponds to frequency, $r$ to time,
+and $K$ to sine or cosine functions. In both cases it is an infinite integral
+which numerical integration is very time-consuming because of the slow decay
+of the kernel function and its oscillatory behaviour.
+
+By substituting $r = e^x$ and $l = e^{-y}$ we get
+\begin{equation}
+  e^x F(e^x) = \int^\infty_{-\infty} f(e^{-y})K(e^{x-y})e^{x-y}\mr{d}y\ .
+  \label{eq:filtint}
+\end{equation}
+This can be re-written as a convolution integral and be approximated for an
+$N$-point filter by
+\begin{equation}
+  F(r) \approx \sum^N_{n=1} \frac{f(b_n/r) h_n}{r}\ ,
+  \label{eq:filtapprox}
+\end{equation}
+where $h$ is the digital linear filter, and the logarithmically spaced filter
+abscissae is a function of the spacing $\Delta$ and the shift $\delta$,
+\begin{equation}
+  b_n = \exp\left\{\Delta(-N/2+n) + \delta\right\} \ .
+  \label{eq:base}
+\end{equation}
+From equation~\ref{eq:filtapprox} it can be seen that the filter method
+requires $N$ evaluations at each $r$. So to calculate for instance the
+frequency domain result for 100 offsets with a 201\,pt filter requires 20'100
+evaluations in the wavenumber domain. This is why the DLF often uses
+interpolation to minimise the required evaluations, either in the right-hand
+side or in the left-hand side.
+
+\subsection{Pseudo-code}
+The main input variables are the filter length ($N$), the spacing ($\Delta$)
+and shift ($\delta$) ranges over which to loop, and the transform pairs for
+the inversion ($f_\mr{I}$) and the check of quality ($f_\mr{C}$). If
+$f_\mr{C}$ is not provided, then $f_\mr{I}$ is used for both. There are
+additional, optional input parameters, for instance to adjust how the rhs
+abscissae $r = f(b, N)$ are calculated, where $b$ is the filter base.
+
+The basic steps are as follows:
+\begin{enumerate}
+  \item Evaluate rhs of check-function $f_\mr{C}$:\newline
+        $d_\mr{R} = f_\mr{C}.\mr{rhs}(r)$
+  \item Loop over each value $\Delta_i$, $\delta_j$ (brute force):
+    \begin{enumerate}
+      \item Calculate filter base:\newline
+        $b_n = \exp\left\{\Delta_i(-N/2+n) + \delta_j\right\}$
+      \item Get required rhs ($r$) and lhs ($l$) evaluation points:\newline
+        $r = f(b, N)$\newline
+        $l = b/r$
+      \item Invert for filter coefficients:\newline
+        $J_{ij} = \mr{solve}(f_\mr{I}.\mr{lhs}(l), f_\mr{I}.\mr{rhs}(r))$
+    \item Calculate numerically rhs of check-function $f_\mr{C}$ with current
+      filter $J_{ij}$:\newline
+      $d_\mr{F} = f_\mr{C}.\mr{lhs}(l)\cdot J_{ij}\ /\ r$
+      \item Store minimum recovered amplitude or maximum $r$ where relative
+        error is less than the provided error:\newline
+        $\chi_{ij} = g\left[
+        \mr{argmin}\left(|(d_\mr{F}-d_\mr{R})/d_\mr{R}| >
+        \mr{error}\right) -1\right]\ $, where $g$ is either $d_\mr{R}$
+        or $1/r$.
+    \end{enumerate}
+  \item Return filter coefficients which yield minimum amplitude or maximum $r$
+    (a local minimization can be run to polish the brute-force result):\newline
+    return $J\left[\mr{argmin}(\chi_{ij})\right] $\newline
+\end{enumerate}
+
+\subsection{Minimization criteria}
+Figure~\ref{fig:InvCrit} shows the differences between the different
+minimization approaches; in (a) for a conventional, fast decaying transform
+pair; and in (b) for a more complex, high frequency layered model. The circles
+show the minimum amplitude used in previous approaches. This criteria is not
+ideal, as it is subject to some random fluctuations and also depends on the
+choice of $r$. The squares show the minimum amplitude given a certain
+acceptable error, and the diamonds show the maximum $r$ given a certain
+acceptable error (the inversion is a minimization process, it therefore
+minimizes $1/r$, not $r$). In simple cases the minimum amplitude given an
+acceptable error and the maximum $r$ given an acceptable error will yield the
+same result. However, in complex cases the maximum $r$ is more consistent and
+therefore a much better criteria.
+%
+\plot*{InvCrit}{width=.9\textwidth}{(a) A regular rhs curve of a transform pair
+  with a purely decaying function. Minimum amplitude or maximum $r$ yield the
+  same result in this scenario. Using a relative error criteria is more stable
+  than just the absolute minimum amplitude. (b) A 1D model for $f=80\,$MHz.
+  Here, the maximum $r$ provides a better criteria for the inversion.}
+%
+
+It is important to note that independent of the inversion criteria the obtained
+absolute value of it is only good to compare inversion results for the same
+model. If you calculate filters with a different transform pair you might get
+very different values, but this difference says nothing about the quality of
+it. For instance, a certain transform pair might yield a lower minimum
+amplitude than the other transform pair, but the resulting filter is worse if
+both filters are compared to the same transform pair. This is due to the
+characteristic of each transform pair.
+
+\section{Numerical examples}
+
+The numerical examples are focused on the Hankel transform, although
+\texttt{fdesign} can be used to design digital linear filters for both Hankel
+and Fourier transforms. As there is no difference in the procedure of the two,
+this should be sufficient to demonstrate the algorithm.
+
+\subsection{Design}
+Figure \ref{fig:201} shows the solution spaces of four consecutive inversion
+runs, where each run is a focus on a subsection of the previous run, indicated
+by the red square.
+%
+\plot*{201}{width=\textwidth}{%
+  Solution spaces of four consecutive inversion runs for a 201\,pt filter. Each
+  consecutive run zooms into a portion of the previous solution space,
+  indicated by the red square. The more in detail we obtain the solution space,
+  the more random appears to be the distribution.}%
+%
+The filter length in this case is $N=201$, and the theoretical transform pairs
+is (as given, e.g., in \cite{USGS.75.Anderson})
+%
+\begin{align}
+  \int^\infty_0\,l \exp\left(-al^2\right) J_0(rl)\,dl &=
+  \frac{\exp\left(\frac{-r^2}{4a}\right)}{2a}\ , \\
+  \int^\infty_0\,l^2 \exp\left(-al^2\right) J_1(rl)\,dl &=
+  \frac{r}{4a^2} \exp\left(-\frac{r^2}{4a}\right)\ ,
+  \label{eq:j01}
+\end{align}
+%
+where $a$ was set to 5. In the algorithm you can provide one pair for the inversion, and a different pair to get the minimum amplitude or the maximum $r$. In
+this case the same transform pair was used for both the inversion and the check
+of quality. The acceptable relative error was set to 1\,\%.
+The rhs evaluation parameter for the inversion was set to $r_\mr{def} = (1, 1,
+2)$, which means that an over-determined system was evaluated with $2N$
+equations, where $r$ was logarithmically spaced from $\log_{10}(1/\max(b)) - 1$
+to $\log_{10}(1/\min(b)) + 1$, where $b$ are the filter abscissae as given in
+equation~\ref{eq:base}.
+
+From the low resolution overview runs (a) and (b) it looks like this is a
+standard, straight-forward minimization problem. However, from the more
+detailed results in (c) and (d) it becomes obvious that it is a minimization
+problem that has to be solved stochastically, as there are solutions with 2
+orders of magnitude difference apparently randomly next to each other.
+
+Figure \ref{fig:201b} shows in (a) the filter values for $J_0$ and $J_1$ of the
+best 201 point filter obtained this way, and in (b) its right-hand-side
+solution. The black dots indicate negative values, from which it can seen that
+adjacent values are often alternating between positive and negative
+contributions.
+%
+\plot*{201b}{width=.9\textwidth}{(a) Filter values of the best obtained 201\,pt
+filter with the corresponding check of quality in (b). Black points indicate
+negative values, which shows that adjacent values have often opposite signs.}
+%
+
+Designing filters is to a large extent trial and error. All input variables
+influence the outcome, and often you will come across a good filter by shear
+luck of choosing the right starting parameters. Each of the input parameters
+has an effect to the outcome. It depends a lot on the transform pairs
+$f_\mr{I;C}$, and functions that decay rapidly are generally better, as noted
+by earlier authors \citep[e.g.][]{USGS.75.Anderson}. It also depends on the
+filter length, and obviously heavily on the spacing and shift values, as this
+is what we invert for. Another important point is how you define the right hand
+evaluation points of the inversion ($r_\mr{def}$). Evaluating corresponding
+transform pairs separately or jointly also leads to different filter
+coefficients ($J_0$, $J_1$, or $J_0$ \& $J_1$, or equally sine, cosine, or sine
+\& cosine); if the real or the imaginary part is used when complex transform
+pairs or \texttt{empymod} is used; and if it is inverted for the minimum
+amplitude or for the maximum $r$.
+
+\subsection{CSEM}
+In this section we compare the 201\,pt filter derived in the previous section
+to CSEM models used in \cite{GP.07.Kong}, \cite{GEO.12.Key}, and a land case.
+
+Figures \ref{fig:kongf5} compares the derived 201\,pt filter with the two
+half-spaces case used by \cite{GP.07.Kong} in his figure 5. The model consists
+of a water layer with $\rho_\mr{w} = 0.3125\,\Omega\,$m of infinite thickness
+above a subsurface half-space with $\rho = 1\,\Omega\,$m. The signal of an
+$x$-directed electric source 50\,m above the interface is measured at an
+$x$-directed electric receiver at the interface, frequency is $f=1\,$Hz.
+%
+\plot*{kongf5}{width=.9\textwidth}{(a) Results of different filters and QWE for
+  the model of figure 5 from \cite{GP.07.Kong} with the relative errors shown
+  in (b), using the QWE result. The relative error is meaningless from about
+  15.5\,km onwards, as QWE failed as well for these very low amplitudes.}
+%
+In (a) it can be seen that the new 201\,pt filter is able to recover smaller
+amplitudes than the 241\,pt filter from \cite{GP.07.Kong}, the 201\,pt filter
+from \cite{GEO.12.Key}, and the 801\,pt filter from \cite{TMS.82.Anderson}
+(Wer201, Kong241, Key201, and And801, respectively). It behaves equally well as
+the quadrature with extrapolation (QWE), for which we used a 51\,pt quadrature
+with relative and absolute tolerance of 1e-12 and 1e-30, respectively. The
+relative error is shown in (b), where the QWE result was taken as \emph{truth}.
+For offsets greater than roughly 15.5\,km the relative error becomes
+meaningless, as the QWE fails itself; this part is greyed out in the figure.
+
+Figure \ref{fig:keyf5} (a) is the canonical CSEM model as used in
+\cite{GEO.12.Key} in his figure 5: Water depth of 2\,km with
+$\rho_\mr{w}=0.303\,\Omega\,$m, a background resistivity of
+$\rho_\mr{b}=1\,\Omega\,$m, in which a target is embedded of
+$\rho_\mr{t}=100\,\Omega\,$m at 1000\,m below the seafloor, 100\,m thick.
+Source depth is 1990\,m, receivers are on the seafloor.
+%
+\plot*{keyf5}{width=.9\textwidth}{(a) The canonical marine CSEM model of
+  \cite{GEO.12.Key} and (b) a land model with source and receiver at the
+  surface. The new filter has generally relative errors which are several
+  magnitudes lower than the other filters.}
+%
+Figure \ref{fig:keyf5} (b) is a land case, with a background resistivity of
+$\rho_\mr{b}=10\,\Omega\,$m, in which a target is embedded of
+$\rho_\mr{t}=500\,\Omega\,$m at 1000\,m below the surface, 100\,m thick. Source
+depth is 0.5\,m, receiver depth is 0.8\,m. In both cases the new filter
+\emph{Wer201} has generally a relative error which is magnitudes lower than the
+other filters.
+
+It is very important to note again that other scenarios might yield very
+different error plots. Although the new 201\,pt filter proves to be very
+accurate for these three models, it might not be the best filter in other
+cases.
+
+\subsection{Ground-penetrating radar}
+
+\rmk{TODO: Add second GPR result; layers swapped}
+
+Figure~\ref{fig:GPR} shows the GPR example as calculated in
+\cite{GEO.15.Hunziker, GEO.17.Werthmuller}; the model parameters are given in
+subplot (a). The filter used for this example for the Hankel transform is a
+2001\,pt filter, derived with the fullspace solution with $f=500\,$MHz for the
+inversion and the check of quality. Vertical source and receiver separation is
+1\,m, resistivity $\rho=200\,\Omega\,$m, $\varepsilon_\mr{r}$=10,
+$\mu_\mr{r}=1$. For the Fourier transform a 4096\,pt FFT was used with
+regularly spaced frequencies from 0.5\,MHz to 850\,MHz and then zero-padded up
+to 2048\,MHz for both the calculation with the adaptive quadrature (QUA) and
+with the DLF. The frequency result is convolved with a Ricker wavelet with a
+center frequency of 250\,MHz, and a gain function ($1 + |t^3|, t$ in ns) is
+applied. The calculation with the digital filter took under 9 minutes and is
+therefore roughly 80 times faster then the adaptive quadrature calculation
+which took roughly 11 hours and 27 minutes. Calculating the same model with QWE
+took 7 hours and 20 minutes. However, QWE uses in roughly 1/3 of the
+calculation internally the adaptive quadrature in this example, see
+\cite{GEO.17.Werthmuller}. (Note that DLF was run in parallel using 4 threads
+at once, taking effectively only 2 minutes and 10 seconds to calculate.
+%EMmod \citep{GEO.15.Hunziker} took for the same model about 18 hours 55
+%minutes, using a 61\,pt Gauss-Kronrod integration routine.
+The lagged convolution version of DLF and the splined version of QWE were used
+in this comparison.)
+%
+\plot*{GPR}{width=\textwidth}{GPR example for the model given in (a) using
+  \texttt{empymod} with (b) the adaptive quadrature (QAGSE from the Fortran
+  QUADPACK library) or with (c) a 2001\,pt digital linear filter (b). The
+  quadrature took about 11\,h 27\,min to calculate, whereas the filter took
+  2\,min 10\,s.}
+%
+
+Figure~\ref{fig:ftGPR} shows in (a)-(c) the real part of the frequency domain
+results and in (d)-(f) the time domain results for offsets of 0.2\,m, 2.0\,m,
+and 3.0\,m.
+%
+\plot*{ftGPR}{width=\textwidth}{The real-part frequency-domain and the
+time-domain responses for offsets of (a) 0.2\,m, (b) 2.0\,m, and (c) 3.0\,m.}
+%
+These examples show clearly that the filter method can indeed be applied to
+high frequency EM modeling and therefore wave phenomena. We are convinced that
+with further tests and analysis much better filters could be achieved, and
+various concepts could be checked. One approach is to derive a filter for each
+frequency band, say one for 1\,MHz--10\,MHz, one for 10\,MHz--100\,MHz, and one
+for 100\,MHz--1\,GHz. Another approach could be to derive distinct filters for
+$J_0$ and $J_1$, with different spacing and shift values. The first idea would
+triple the calculation cost, the second idea double them; however, they both
+would still be very fast compared to standard quadrature methods.
+
+\section{Conclusions}
+
+The presented, free and open-source algorithm \texttt{fdesign} can be used to
+design digital linear filters for the Hankel and Fourier transforms (and more
+generally for any linear transform) using either analytical transform pairs or
+1D subsurface models together with the EM-modeler \texttt{empymod}.
+The code is available from GitHub in the add-on repository of \texttt{empymod},
+called \texttt{empyscripts}, from version 0.1.2 onwards.
+
+The presented 201\,pt filter achieves more precise results in the three
+presented CSEM cases than other filters, and is included in \texttt{empymod}
+from version 1.4.5 onwards. However, as with any digital filter, the quality
+depends heavily on the model, and this new filter might or might not behave
+that well for other models.
+
+The shown GPR result shows that the digital linear filter method can also be
+used for wave phenomena, not only for the diffusive approximation limit of low
+frequency EM modeling.
+
+We hope the presented algorithm is useful for at least 3 scenarios:
+\begin{enumerate}
+  \item Provide a fast method to design problem-specific filters. For bigger
+    inversion projects (such as, for instance, massive stochastic CSEM
+    inversions) a purpose designed, short filter might save much more time than
+    it costs to design it. This could even be integrated into inversion codes,
+    as an optional pre-inversion step.
+  \item Extend the filter method to new areas, namely higher frequencies.
+  \item Raise a new interest for digital linear filters in geophysics, by
+    making it very easy for anyone to play around, create their own filters,
+    and get a better understanding of it. We are sure there are many great
+    filters to be discovered.
+\end{enumerate}
+
+\section{Acknowledgment}
+D.W. would like to thank his colleague Oleg Gurevich Titov, who introduced him
+to linear digital filters in the first place.
+% This project would not have been successful without the fruitful discussions
+% with Evert Slob and Kerry Key. Many thanks as well to Kerry Key for providing
+% me with his Matlab scripts, which served as a starting point and initiated
+% this project.
+
+% REFERENCES
+\bibliographystyle{seg}
+\bibliography{\string~/.dotfiles/LaTeX/dtrRef}
+
+\end{document}
