@@ -12,3 +12,8 @@ uncomitted/
 notebooks/data/*.npz
 notebooks/data/*.npy
 figures/Figure_*.tif
+data/*.zip
+data/*.npz
+*.dat
+*.dir
+*.bak
