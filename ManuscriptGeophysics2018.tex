@@ -103,7 +103,7 @@ Evert C.\ Slob\footnotemark[3]%
 % (3) RESULTS
   The comparison of the presented 201\,pt filter with previously presented
   filters shows that it performs better for some standard CSEM cases. The
-  derivation of longer 2001\,pt filter for a GPR example with 250\,MHz centre
+  derivation of a longer 2001\,pt filter for a GPR example with 250\,MHz centre
   frequency proves that the filter method works also for wave phenomena, not
   only for diffusive EM fields.
 %
@@ -199,15 +199,15 @@ specifically for the Fourier transform by \cite{GP.86.Nissen}. A direct
 integration method was used by \cite{GP.76.Bichara, GP.78.Bernabini}.
 \cite{GP.79.Koefoed} proposed a Wiener-Hopf least-squares method, which was
 further improved by many authors \citep{GP.82.Guptasarma, GEO.1982.Murakami,
-GP.97.Guptasarma}. \cite{GP.07.Kong} proposes a direct matrix inversion method
+GP.97.Guptasarma}. \cite{GP.07.Kong} proposed a direct matrix inversion method
 to solve the convolution equation, which requires only the input and output
 sample values. To evaluate the filters he defines the criteria of a good filter
-as one that recovers small or weak wavefields. This method was also used by
-\cite{GEO.09.Key, GEO.12.Key}. Most authors publish filters for the Hankel
-transform with $J_0$ and $J_1$ Bessel functions (or $J_{-1/2}$, $J_{1/2}$ if
-applied to the Fourier sine/cosine transform), as all higher Bessel functions
-can be rewritten to only use these two. \cite{GP.94.Mohsen} is one of the rare
-cases which provides $J_2$ filter weights.
+as one that recovers small or weak diffusive EM fields. This method was also
+used by \cite{GEO.09.Key, GEO.12.Key}. Most authors publish filters for the
+Hankel transform with $J_0$ and $J_1$ Bessel functions (or $J_{-1/2}$,
+$J_{1/2}$ if applied to the Fourier sine/cosine transform), as all higher
+Bessel functions can be rewritten to only use these two. \cite{GP.94.Mohsen} is
+one of the rare cases which provides $J_2$ filter weights.
 
 \subsubsection{(3) Codes}
 
@@ -234,8 +234,8 @@ routines of CSIRO in the Amira Project 223 \citep{ASEG.07.Raiche}. \newline
 All mentioned publications have in common that they were derived for direct
 current methods (DC) or low frequency methods, such as time-domain shallow EM
 methods (TEM), or controlled-source electromagnetics (CSEM), but not for high
-frequency methods such as ground-penetrating radar (GPR). Generally it was even
-thought that the filter method works only in the diffusive limit
+frequency methods such as ground-pe\-ne\-tra\-ting radar (GPR). Generally it
+was even thought that the filter method works only in the diffusive limit
 \citep[e.g.,][]{GEO.15.Hunziker}. Also, there is no open-source filter
 designing tool readily available, they are available as a described method
 in articles or as code upon request by the author, if at all. The presented
@@ -268,7 +268,8 @@ The main points of the method and some differences between it and the methods
 it is based upon are:
 \begin{itemize}
   \item The algorithm computes many different filters for various spacing and
-    shift values (brute-force).
+    shift values (brute-force), with an optional minimization routine for
+    the best outcome of the brute-force step.
   \item \cite{GP.07.Kong, GEO.12.Key} optimize a filter for the $J_0$ filter,
     and then use the obtained shift and spacing value to calculate the $J_1$
     values. The presented algorithm can optimize either $J_0$, $J_1$, or both
@@ -290,7 +291,7 @@ it is based upon are:
     yield much better and more consistent results.
   \item The algorithm allows to run under-, equal-, and over-determined
     systems.
-  \item the real or the imaginary part can be used for the inversion of complex
+  \item The real or the imaginary part can be used for the inversion of complex
     transform pairs.
 \end{itemize}
 
@@ -306,8 +307,8 @@ care.
 
 Most of the articles mentioned in the review have detailed derivations of the
 digital filter method. In this article we focus on the algorithm, and summarize
-the theory only very briefly by following \cite{GEO.12.Key} (equations
-(2)-(6)). In electromagnetics we often have to evaluate integrals of the form
+the theory only very briefly by following \cite{GEO.12.Key}. In
+electromagnetics we often have to evaluate integrals of the form
 %
 \begin{equation}
   F(r) = \int^\infty_0 f(l)K(l r)\mr{d}l \ ,
@@ -340,11 +341,11 @@ abscissae is a function of the spacing $\Delta$ and the shift $\delta$,
   \label{eq:base}
 \end{equation}
 From equation~\ref{eq:filtapprox} it can be seen that the filter method
-requires $N$ evaluations at each $r$. So to calculate for instance the
-frequency domain result for 100 offsets with a 201\,pt filter requires 20'100
-evaluations in the wavenumber domain. This is why the DLF often uses
-interpolation to minimise the required evaluations, either in the right-hand
-side or in the left-hand side.
+requires $N$ evaluations at each $r$. To calculate for instance the frequency
+domain result for 100 offsets with a 201\,pt filter requires 20'100 evaluations
+in the wavenumber domain. This is why the DLF often uses interpolation to
+minimise the required evaluations, either in the right-hand side (often called
+\emph{lagged convolution DLF}) or in the left-hand side (\emph{splined DLF}).
 
 \subsection{Pseudo-code}
 The main input variables are the filter length ($N$), the spacing ($\Delta$)
@@ -431,7 +432,7 @@ by the red square.
   the more random appears to be the distribution.}%
 %
 The filter length in this case is $N=201$, and the theoretical transform pairs
-is (as given, e.g., in \cite{USGS.75.Anderson})
+are (as given, e.g., in \cite{USGS.75.Anderson})
 %
 \begin{align}
   \int^\infty_0\,l \exp\left(-al^2\right) J_0(rl)\,dl &=
@@ -474,19 +475,19 @@ has an effect to the outcome. It depends a lot on the transform pairs
 $f_\mr{I;C}$, and functions that decay rapidly are generally better, as noted
 by earlier authors \citep[e.g.][]{USGS.75.Anderson}. It also depends on the
 filter length, and obviously heavily on the spacing and shift values, as this
-is what we invert for. Another important point is how you define the right hand
+is what we invert for. Another important point is how you define the right-hand
 evaluation points of the inversion ($r_\mr{def}$). Evaluating corresponding
 transform pairs separately or jointly also leads to different filter
 coefficients ($J_0$, $J_1$, or $J_0$ \& $J_1$, or equally sine, cosine, or sine
-\& cosine); if the real or the imaginary part is used when complex transform
-pairs or \texttt{empymod} is used; and if it is inverted for the minimum
-amplitude or for the maximum $r$.
+\& cosine); also if the real or the imaginary part is used when complex
+transform pairs or \texttt{empymod} is used; and if it is inverted for the
+minimum amplitude or for the maximum $r$.
 
 \subsection{CSEM}
 In this section we compare the 201\,pt filter derived in the previous section
 to CSEM models used in \cite{GP.07.Kong}, \cite{GEO.12.Key}, and a land case.
 
-Figures \ref{fig:kongf5} compares the derived 201\,pt filter with the two
+Figure~\ref{fig:kongf5} compares the derived 201\,pt filter with the two
 half-spaces case used by \cite{GP.07.Kong} in his figure 5. The model consists
 of a water layer with $\rho_\mr{w} = 0.3125\,\Omega\,$m of infinite thickness
 above a subsurface half-space with $\rho = 1\,\Omega\,$m. The signal of an
@@ -518,14 +519,20 @@ Source depth is 1990\,m, receivers are on the seafloor.
 \plot*{keyf5}{width=.9\textwidth}{(a) The canonical marine CSEM model of
   \cite{GEO.12.Key} and (b) a land model with source and receiver at the
   surface. The new filter has generally relative errors which are several
-  magnitudes lower than the other filters.}
+  orders of magnitude lower than the other filters.}
 %
-Figure \ref{fig:keyf5} (b) is a land case, with a background resistivity of
-$\rho_\mr{b}=10\,\Omega\,$m, in which a target is embedded of
+Figure \ref{fig:keyf5} (b) is a land case, with a background resistivity
+of $\rho_\mr{b}=10\,\Omega\,$m, in which a target is embedded of
 $\rho_\mr{t}=500\,\Omega\,$m at 1000\,m below the surface, 100\,m thick. Source
 depth is 0.5\,m, receiver depth is 0.8\,m. In both cases the new filter
-\emph{Wer201} has generally a relative error which is magnitudes lower than the
-other filters.
+\emph{Wer201} has generally a relative error which is orders of magnitude
+lower than the other filters. The relative error of the real part is given
+in black, whereas the relative error of the imaginary part is given in grey.
+It is interesting to note that the real and imaginary parts have very similar
+errors in \emph{Wer201}, \emph{Key201}, and \emph{And801}, but that the
+imaginary part of \emph{Kong241} seems to behave considerably better for most
+part than its real counterpart. To compare the real and the imaginary parts is
+insofar interesting as the digital filters are purely real valued.
 
 It is very important to note again that other scenarios might yield very
 different error plots. Although the new 201\,pt filter proves to be very
@@ -533,8 +540,6 @@ accurate for these three models, it might not be the best filter in other
 cases.
 
 \subsection{Ground-penetrating radar}
-
-\rmk{TODO: Add second GPR result; layers swapped}
 
 Figure~\ref{fig:GPR} shows the GPR example as calculated in
 \cite{GEO.15.Hunziker, GEO.17.Werthmuller}; the model parameters are given in
@@ -545,10 +550,10 @@ inversion and the check of quality. Vertical source and receiver separation is
 $\mu_\mr{r}=1$. For the Fourier transform a 4096\,pt FFT was used with
 regularly spaced frequencies from 0.5\,MHz to 850\,MHz and then zero-padded up
 to 2048\,MHz for both the calculation with the adaptive quadrature (QUA) and
-with the DLF. The frequency result is convolved with a Ricker wavelet with a
+with the DLF. The frequency result is multiplied with a Ricker wavelet with a
 center frequency of 250\,MHz, and a gain function ($1 + |t^3|, t$ in ns) is
 applied. The calculation with the digital filter took under 9 minutes and is
-therefore roughly 80 times faster then the adaptive quadrature calculation
+therefore roughly 80 times faster than the adaptive quadrature calculation
 which took roughly 11 hours and 27 minutes. Calculating the same model with QWE
 took 7 hours and 20 minutes. However, QWE uses in roughly 1/3 of the
 calculation internally the adaptive quadrature in this example, see
@@ -563,7 +568,7 @@ in this comparison.)
   \texttt{empymod} with (b) the adaptive quadrature (QAGSE from the Fortran
   QUADPACK library) or with (c) a 2001\,pt digital linear filter (b). The
   quadrature took about 11\,h 27\,min to calculate, whereas the filter took
-  2\,min 10\,s.}
+  2\,min 10\,s in parallel on 4 nodes, hence under 9\,min in total.}
 %
 
 Figure~\ref{fig:ftGPR} shows in (a)-(c) the real part of the frequency domain
@@ -571,8 +576,25 @@ results and in (d)-(f) the time domain results for offsets of 0.2\,m, 2.0\,m,
 and 3.0\,m.
 %
 \plot*{ftGPR}{width=\textwidth}{The real-part frequency-domain and the
-time-domain responses for offsets of (a) 0.2\,m, (b) 2.0\,m, and (c) 3.0\,m.}
+time-domain responses for offsets of (a/d) 0.2\,m, (b/e) 2.0\,m, and (c/f)
+3.0\,m.}
 %
+
+The 2001\,pt filter was derived with the fullspace solution of a medium which
+is very similar to the layer in which source and receiver reside in our GPR
+example. To show that this filter can also be applied to different layer
+parameters we run a test where we swapped layers one and two of the model
+in Figure \ref{fig:GPR} (a). The resulting real and imaginary parts for the
+offsets 0.2\,m, 2.0\,m, and 3.0\,m are given in Figure~\ref{fig:ftGPR2nd}.
+
+
+%
+\plot*{ftGPR2nd}{width=\textwidth}{The real and imaginary parts of the
+  frequency-domain response for the model given in Figure~\ref{fig:GPR} (a)
+  with swapped first and second layers for offsets of (a) 0.2\,m, (b) 2.0\,m,
+  and (c) 3.0\,m.}
+%
+
 These examples show clearly that the filter method can indeed be applied to
 high frequency EM modeling and therefore wave phenomena. We are convinced that
 with further tests and analysis much better filters could be achieved, and
@@ -581,16 +603,18 @@ frequency band, say one for 1\,MHz--10\,MHz, one for 10\,MHz--100\,MHz, and one
 for 100\,MHz--1\,GHz. Another approach could be to derive distinct filters for
 $J_0$ and $J_1$, with different spacing and shift values. The first idea would
 triple the calculation cost, the second idea double them; however, they both
-would still be very fast compared to standard quadrature methods.
+would still be very fast compared to standard quadrature methods. One could
+also apply the digital filter method to acoustic and elastic wavefields as
+well.
 
 \section{Conclusions}
 
-The presented, free and open-source algorithm \texttt{fdesign} can be used to
-design digital linear filters for the Hankel and Fourier transforms (and more
+The presented, free and open-source code \texttt{fdesign} can be used to design
+digital linear filters for the Hankel and Fourier transforms (and more
 generally for any linear transform) using either analytical transform pairs or
-1D subsurface models together with the EM-modeler \texttt{empymod}.
-The code is available from GitHub in the add-on repository of \texttt{empymod},
-called \texttt{empyscripts}, from version 0.1.2 onwards.
+1D subsurface models together with the EM-modeler \texttt{empymod}. The code is
+available from GitHub in the add-on repository of \texttt{empymod}, called
+\texttt{empyscripts}, from version 0.1.2 onwards.
 
 The presented 201\,pt filter achieves more precise results in the three
 presented CSEM cases than other filters, and is included in \texttt{empymod}
@@ -602,14 +626,15 @@ The shown GPR result shows that the digital linear filter method can also be
 used for wave phenomena, not only for the diffusive approximation limit of low
 frequency EM modeling.
 
-We hope the presented algorithm is useful for at least 3 scenarios:
+We except the presented algorithm is useful for at least 3 scenarios:
 \begin{enumerate}
   \item Provide a fast method to design problem-specific filters. For bigger
     inversion projects (such as, for instance, massive stochastic CSEM
     inversions) a purpose designed, short filter might save much more time than
     it costs to design it. This could even be integrated into inversion codes,
     as an optional pre-inversion step.
-  \item Extend the filter method to new areas, namely higher frequencies.
+  \item Extend the filter method to new areas, namely higher frequencies and
+    acoustic and elastic wavefields.
   \item Raise a new interest for digital linear filters in geophysics, by
     making it very easy for anyone to play around, create their own filters,
     and get a better understanding of it. We are sure there are many great
@@ -618,14 +643,350 @@ We hope the presented algorithm is useful for at least 3 scenarios:
 
 \section{Acknowledgment}
 D.W. would like to thank his colleague Oleg Gurevich Titov, who introduced him
-to linear digital filters in the first place.
+to linear digital filters in the first place, and Jürg Hunziker for valuable
+feedback which improved this manuscript considerably.
 % This project would not have been successful without the fruitful discussions
 % with Evert Slob and Kerry Key. Many thanks as well to Kerry Key for providing
 % me with his Matlab scripts, which served as a starting point and initiated
 % this project.
 
 % REFERENCES
-\bibliographystyle{seg}
-\bibliography{\string~/.dotfiles/LaTeX/dtrRef}
+\begin{thebibliography}{}
+\itemsep0pt
+
+\bibitem[Anderson, 1973]{USGS.73.Anderson}
+Anderson, W.~L.,  1973, Fortran {IV} programs for the determination of the
+  transient tangential electric field and vertical magnetic field about a
+  vertical magnetic dipole for an m-layer stratified earth by numerical
+  integration and digital linear filtering: USGS, {\bf PB221240}.
+
+\bibitem[Anderson, 1975]{USGS.75.Anderson}
+--------, 1975, Improved digital filters for evaluating {F}ourier and {H}ankel
+  transform integrals: USGS, {\bf PB242800}.
+\newblock
+  (\href{https://pubs.er.usgs.gov/publication/70045426}{https://pubs.er.usgs.gov/publication/70045426}).
+
+\bibitem[Anderson, 1979]{GEO.79.Anderson}
+--------, 1979, Numerical integration of related {H}ankel transforms of orders
+  0 and 1 by adaptive digital filtering: Geophysics, {\bf 44}, 1287--1305.
+\newblock (\href{http://doi.org/10.1190/1.1441007}{doi: 10.1190/1.1441007}).
+
+\bibitem[Anderson, 1982]{TMS.82.Anderson}
+--------, 1982, Fast {H}ankel transforms using related and lagged convolutions:
+  ACM Trans. Math. Softw., {\bf 8}, 344--368.
+\newblock (\href{http://doi.acm.org/10.1145/356012.356014}{doi:
+  10.1145/356012.356014}).
+
+\bibitem[Anderson, 1984]{GEO.84.Anderson}
+--------, 1984, {On: “Numerical integration of related Hankel transforms by
+  quadrature and continued fraction expansion” by \cite{GEO.83.Chave}}:
+  Geophysics, {\bf 49}, 1811--1812.
+\newblock (\href{http://doi.org/10.1190/1.1441595}{doi: 10.1190/1.1441595}).
+
+\bibitem[Anderson, 1989]{GEO.89.Anderson}
+--------, 1989, A hybrid fast {H}ankel transform algorithm for electromagnetic
+  modeling: Geophysics, {\bf 54}, 263--266.
+\newblock (\href{http://doi.org/10.1190/1.1442650}{doi: 10.1190/1.1442650}).
+
+\bibitem[Bernabini and Cardarelli, 1978]{GP.78.Bernabini}
+Bernabini, M., and E. Cardarelli,  1978, The use of filtered {B}essel functions
+  in direct interpretation of geoelectrical soundings: Geophysical Prospecting,
+  {\bf 26}, 841--852.
+\newblock (\href{http://doi.org/10.1111/j.1365-2478.1978.tb01636.x}{doi:
+  10.1111/j.1365-2478.1978.tb01636.x}).
+
+\bibitem[Bichara and Lakshmanan, 1976]{GP.76.Bichara}
+Bichara, M., and J. Lakshmanan,  1976, Fast automatic processing of resistivity
+  soundings*: Geophysical Prospecting, {\bf 24}, 354--370.
+\newblock (\href{http://doi.org/10.1111/j.1365-2478.1976.tb00932.x}{doi:
+  10.1111/j.1365-2478.1976.tb00932.x}).
+
+\bibitem[Chave, 1983]{GEO.83.Chave}
+Chave, A.~D.,  1983, Numerical integration of related {H}ankel transforms by
+  quadrature and continued fraction expansion: Geophysics, {\bf 48},
+  1671--1686.
+\newblock (\href{http://doi.org/10.1190/1.1441448}{doi: 10.1190/1.1441448}).
+
+\bibitem[Christensen, 1990]{GP.90.Christensen}
+Christensen, N.~B.,  1990, Optimized fast {H}ankel transform filters:
+  Geophysical Prospecting, {\bf 38}, 545--568.
+\newblock (\href{http://doi.org/10.1111/j.1365-2478.1990.tb01861.x}{doi:
+  10.1111/j.1365-2478.1990.tb01861.x}).
+
+\bibitem[Das, 1982]{GEO.82.Das}
+Das, U.~C.,  1982, Designing digital linear filters for computing resistivity
+  and electromagnetic sounding curves: Geophysics, {\bf 47}, 1456--1459.
+\newblock (\href{https://doi.org/10.1190/1.1441295}{doi: 10.1190/1.1441295}).
+
+\bibitem[Das, 1984]{GEO.84.Das}
+--------, 1984, A single digital linear filter for computations in electrical
+  methods--a unifying approach: Geophysics, {\bf 49}, 1115--1118.
+\newblock (\href{https://doi.org/10.1190/1.1441726}{doi: 10.1190/1.1441726}).
+
+\bibitem[Das and Ghosh, 1974]{GP.74.Das}
+Das, U.~C., and D.~P. Ghosh,  1974, The determination of filter coefficients
+  for the computation of standard curves for dipole resistivity sounding over
+  layered earth by linear digital filtering: Geophysical Prospecting, {\bf 22},
+  765--780.
+\newblock (\href{http://doi.org/10.1111/j.1365-2478.1974.tb00117.x}{doi:
+  10.1111/j.1365-2478.1974.tb00117.x}).
+
+\bibitem[Das et~al., 1974]{GP.74.Dasb}
+Das, U.~C., D.~P. Ghosh, and D.~T. Biewinga,  1974, Transformation of dipole
+  resistivity sounding measurements over layered earth by linear digital
+  filtering: Geophysical Prospecting, {\bf 22}, 476--489.
+\newblock (\href{http://doi.org/10.1111/j.1365-2478.1974.tb00100.x}{doi:
+  10.1111/j.1365-2478.1974.tb00100.x}).
+
+\bibitem[Das and Verma, 1980]{GP.80.Das}
+Das, U.~C., and S.~K. Verma,  1980, Digital linear filter for computing type
+  curves for the two-electrode system of resistivity sounding: Geophysical
+  Prospecting, {\bf 28}, 610--619.
+\newblock (\href{http://doi.org/10.1111/j.1365-2478.1980.tb01246.x}{doi:
+  10.1111/j.1365-2478.1980.tb01246.x}).
+
+\bibitem[Das and Verma, 1981a]{GJI.81.Das}
+--------, 1981a, Numerical considerations on computing the {EM} response of
+  three-dimensional inhomogeneities in a layered earth: Geophysical Journal
+  International, {\bf 66}, 733--740.
+\newblock (\href{http://doi.org/10.1111/j.1365-246X.1981.tb04897.x}{doi:
+  10.1111/j.1365-246X.1981.tb04897.x}).
+
+\bibitem[Das and Verma, 1981b]{GXP.81.Das}
+--------, 1981b, The versatility of digital linear filters used in computing
+  resistivity and em sounding curves: Geoexploration, {\bf 18}, 297--310.
+\newblock (\href{http://doi.org/10.1016/0016-7142(81)90059-4}{doi:
+  10.1016/0016-7142(81)90059-4}).
+
+\bibitem[Das and Verma, 1982]{GJI.82.Das}
+--------, 1982, Electromagnetic response of an arbitrarily shaped
+  three-dimensional conductor in a layered earth — numerical results:
+  Geophysical Journal International, {\bf 69}, 55--66.
+\newblock (\href{http://doi.org/10.1111/j.1365-246X.1982.tb04935.x}{doi:
+  10.1111/j.1365-246X.1982.tb04935.x}).
+
+\bibitem[Davis et~al., 1980]{EXG.80.Davis}
+Davis, P.~A., S.~A. Greenhalgh, and N.~P. Merrick,  1980, Resistivity sounding
+  computations with any array using a single digital filter: Exploration
+  Geophysics, {\bf 11}, 54--62.
+\newblock (\href{http://library.seg.org/doi/abs/10.1071/EG980054}{doi:
+  10.1071/EG980054}).
+
+\bibitem[Ghosh, 1970]{PhD.70.Ghosh}
+Ghosh, D.~P.,  1970, The application of linear filter theory to the direct
+  interpretation of geoelectrical resistivity measurements: {Ph.D. Thesis}, {TU
+  Delft}.
+\newblock
+  (\href{http://resolver.tudelft.nl/uuid:88a568bb-ebee-4d7b-92df-6639b42da2b2}{uuid:
+  88a568bb-ebee-4d7b-92df-6639b42da2b2}).
+
+\bibitem[Ghosh, 1971a]{GP.71.Ghosh}
+--------, 1971a, The application of linear filter theory to the direct
+  interpretation of geoelectrical resistivity sounding measurements:
+  Geophysical Prospecting, {\bf 19}, 192--217.
+\newblock (\href{http://doi.org/10.1111/j.1365-2478.1971.tb00593.x}{doi:
+  10.1111/j.1365-2478.1971.tb00593.x}).
+
+\bibitem[Ghosh, 1971b]{GP.71.Ghoshb}
+--------, 1971b, Inverse filter coefficients for the computation of apparent
+  resistivity standard curves for a horizontally stratified earth: Geophysical
+  Prospecting, {\bf 19}, 769--775.
+\newblock (\href{http://doi.org/10.1111/j.1365-2478.1971.tb00915.x}{doi:
+  10.1111/j.1365-2478.1971.tb00915.x}).
+
+\bibitem[Guptasarma, 1982]{GP.82.Guptasarma}
+Guptasarma, D.,  1982, Optimization of short digital linear filters for
+  increased accuracy: Geophysical Prospecting, {\bf 30}, 501--514.
+\newblock (\href{http://doi.org/10.1111/j.1365-2478.1982.tb01320.x}{doi:
+  10.1111/j.1365-2478.1982.tb01320.x}).
+
+\bibitem[Guptasarma and Singh, 1997]{GP.97.Guptasarma}
+Guptasarma, D., and B. Singh,  1997, New digital linear filters for {H}ankel
+  {J}0 and {J}1 transforms: Geophysical Prospecting, {\bf 45}, 745--762.
+\newblock (\href{http://doi.org/10.1046/j.1365-2478.1997.500292.x}{doi:
+  10.1046/10.1046/j.1365-2478.1997.500292.x}).
+
+\bibitem[Hunziker et~al., 2015]{GEO.15.Hunziker}
+Hunziker, J., J. Thorbecke, and E. Slob,  2015, The electromagnetic response in
+  a layered vertical transverse isotropic medium: {A} new look at an old
+  problem: Geophysics, {\bf 80}, no. 1, F1--F18.
+\newblock (\href{http://doi.org/10.1190/geo2013-0411.1}{doi:
+  10.1190/geo2013-0411.1}).
+
+\bibitem[Johansen, 1975]{GP.75.Johansen}
+Johansen, H.~K.,  1975, An interactive computer/graphic-display-terminal system
+  for interpretation of resistivity soundings: Geophysical Prospecting, {\bf
+  23}, 449--458.
+\newblock (\href{http://doi.org/10.1111/j.1365-2478.1975.tb01541.x}{doi:
+  10.1111/j.1365-2478.1975.tb01541.x}).
+
+\bibitem[Johansen and Sørensen, 1979]{GP.79.Johansen}
+Johansen, H.~K., and K. Sørensen,  1979, Fast {H}ankel transforms: Geophysical
+  Prospecting, {\bf 27}, 876--901.
+\newblock (\href{http://doi.org/10.1111/j.1365-2478.1979.tb01005.x}{doi:
+  10.1111/j.1365-2478.1979.tb01005.x}).
+
+\bibitem[Key, 2009]{GEO.09.Key}
+Key, K.,  2009, {1D} inversion of multicomponent, multifrequency marine {CSEM}
+  data: {M}ethodology and synthetic studies for resolving thin resistive
+  layers: Geophysics, {\bf 74}, no. 2, F9--F20.
+\newblock (\href{http://doi.org/10.1190/1.3058434}{doi: 10.1190/1.3058434}).
+
+\bibitem[Key, 2012]{GEO.12.Key}
+--------, 2012, Is the fast {H}ankel transform faster than quadrature?:
+  Geophysics, {\bf 77}, no. 3, F21--F30.
+\newblock (\href{http://doi.org/10.1190/GEO2011-0237.1}{doi:
+  10.1190/GEO2011-0237.1}).
+
+\bibitem[Koefoed, 1968]{BK.68.Koefoed}
+Koefoed, O.,  1968, The application of the kernel function in interpreting
+  geoelectrical resistivity measurements: Gebrüder Borntraeger.
+\newblock ({I}SBN: 9783443130022).
+
+\bibitem[Koefoed, 1970]{GP.70.Koefoed}
+--------, 1970, A fast method for determining the layer distribution from the
+  raised kernel function in geoelectrical sounding: Geophysical Prospecting,
+  {\bf 18}, 564--570.
+\newblock (\href{http://doi.org/10.1111/j.1365-2478.1970.tb02129.x}{doi:
+  10.1111/j.1365-2478.1970.tb02129.x}).
+
+\bibitem[Koefoed, 1972]{GP.72.Koefoedb}
+--------, 1972, A note on the linear filter method of interpreting resistivity
+  sounding data: Geophysical Prospecting, {\bf 20}, 403--405.
+\newblock (\href{http://doi.org/10.1111/j.1365-2478.1972.tb00643.x}{doi:
+  10.1111/j.1365-2478.1972.tb00643.x}).
+
+\bibitem[Koefoed, 1976]{GP.76.Koefoedb}
+--------, 1976, Error propagation and uncertainty in the interpretation of
+  resistivity sounding data: Geophysical Prospecting, {\bf 24}, 31--48.
+\newblock (\href{http://doi.org/10.1111/j.1365-2478.1976.tb00383.x}{doi:
+  10.1111/j.1365-2478.1976.tb00383.x}).
+
+\bibitem[Koefoed and Dirks, 1979]{GP.79.Koefoed}
+Koefoed, O., and F.~J.~H. Dirks,  1979, Determination of resistivity sounding
+  filters by the {W}iener-{H}opf least-squares method: Geophysical Prospecting,
+  {\bf 27}, 245--250.
+\newblock (\href{http://doi.org/10.1111/j.1365-2478.1979.tb00968.x}{doi:
+  10.1111/j.1365-2478.1979.tb00968.x}).
+
+\bibitem[Koefoed et~al., 1972]{GP.72.Koefoed}
+Koefoed, O., D.~P. Ghosh, and G.~J. Polman,  1972, Computation of type curves
+  for electromagnetic depth sounding with a horizontal transmitting coil by
+  means of a digital linear filter: Geophysical Prospecting, {\bf 20},
+  406--420.
+\newblock (\href{http://doi.org/10.1111/j.1365-2478.1972.tb00644.x}{doi:
+  10.1111/j.1365-2478.1972.tb00644.x}).
+
+\bibitem[Kong, 2007]{GP.07.Kong}
+Kong, F.~N.,  2007, Hankel transform filters for dipole antenna radiation in a
+  conductive medium: Geophysical Prospecting, {\bf 55}, 83--89.
+\newblock (\href{http://doi.org/10.1111/j.1365-2478.2006.00585.x}{doi:
+  10.1111/j.1365-2478.2006.00585.x}).
+
+\bibitem[Kruglyakov and Bloshanskaya, 2017]{MGS.17.Kruglyakov}
+Kruglyakov, M., and L. Bloshanskaya,  2017, High-performance parallel solver
+  for integral equations of electromagnetics based on {G}alerkin method:
+  Mathematical Geosciences, {\bf 49}, 751--776.
+\newblock (\href{https://doi.org/10.1007/s11004-017-9677-y}{doi:
+  10.1007/s11004-017-9677-y}).
+
+\bibitem[Kumar and Das, 1977]{GP.77.Kumar}
+Kumar, R., and U.~C. Das,  1977, Transformation of dipole to {S}chlumberger
+  sounding curves by means of digital linear filters: Geophysical Prospecting,
+  {\bf 25}, 780--789.
+\newblock (\href{http://doi.org/10.1111/j.1365-2478.1977.tb01204.x}{doi:
+  10.1111/j.1365-2478.1977.tb01204.x}).
+
+\bibitem[Kumar and Das, 1978]{GP.78.Kumar}
+--------, 1978, Transformation of {S}chlumberger apparent resistivity to dipole
+  apparent resistivity over layered earth by the application of digital linear
+  filters: Geophysical Prospecting, {\bf 26}, 352--358.
+\newblock (\href{http://doi.org/10.1111/j.1365-2478.1978.tb01598.x}{doi:
+  10.1111/j.1365-2478.1978.tb01598.x}).
+
+\bibitem[Mohsen and Hashish, 1994]{GP.94.Mohsen}
+Mohsen, A.~A., and E.~A. Hashish,  1994, The fast {H}ankel transform:
+  Geophysical Prospecting, {\bf 42}, 131--139.
+\newblock (\href{http://doi.org/10.1111/j.1365-2478.1994.tb00202.x}{doi:
+  10.1111/j.1365-2478.1994.tb00202.x}).
+
+\bibitem[Murakami and Uchida, 1982]{GEO.1982.Murakami}
+Murakami, Y., and T. Uchida,  1982, Accuracy of the linear filter coefficients
+  determined by the iteration of the least-squares method: Geophysics, {\bf
+  47}, 244--256.
+\newblock (\href{https://doi.org/10.1190/1.1441331}{doi: 10.1190/1.1441331}).
+
+\bibitem[Newman et~al., 1986]{GEO.86.Newman}
+Newman, G.~A., G.~W. Hohmann, and W.~L. Anderson,  1986, Transient
+  electromagnetic response of a three-dimensional body in a layered earth:
+  Geophysics, {\bf 51}, 1608--1627.
+\newblock (\href{http://doi.org/10.1190/1.1442212}{doi: 10.1190/1.1442212}).
+
+\bibitem[Nissen and Enmark, 1986]{GP.86.Nissen}
+Nissen, J., and T. Enmark,  1986, An optimized digital filter for the {F}ourier
+  transform: Geophysical Prospecting, {\bf 34}, 897--903.
+\newblock (\href{http://doi.org/10.1111/j.1365-2478.1986.tb00500.x}{doi:
+  10.1111/j.1365-2478.1986.tb00500.x}).
+
+\bibitem[Niwas, 1975]{GEO.75.Niwas}
+Niwas, S.,  1975, Direct interpretation of geoelectric measurements by the use
+  of linear filter theory: Geophysics, {\bf 40}, 121--122.
+\newblock (\href{https://doi.org/10.1190/1.1440510}{doi: 10.1190/1.1440510}).
+
+\bibitem[Nyman and Landisman, 1977]{GEO.77.Nyman}
+Nyman, D.~C., and M. Landisman,  1977, {VES} dipole-dipole filter coefficients:
+  Geophysics, {\bf 42}, 1037--1044.
+\newblock (\href{https://doi.org/10.1190/1.1440763}{doi: 10.1190/1.1440763}).
+
+\bibitem[O'Neill, 1975]{EXG.75.ONeill}
+O'Neill, D.,  1975, Improved linear filter coefficients for application in
+  apparent resistivity computations: Exploration Geophysics, {\bf 6}, 104--109.
+\newblock (\href{http://library.seg.org/doi/abs/10.1071/EG975104}{doi:
+  10.1071/EG975104}).
+
+\bibitem[O'Neill and Merrick, 1984]{GP.84.ONeill}
+O'Neill, D.~J., and N.~P. Merrick,  1984, A digital linear filter for
+  resistivity sounding with a generalized electrode array: Geophysical
+  Prospecting, {\bf 32}, 105--123.
+\newblock (\href{http://doi.org/10.1111/j.1365-2478.1984.tb00720.x}{doi:
+  10.1111/j.1365-2478.1984.tb00720.x}).
+
+\bibitem[Pekeris, 1940]{GEO.40.Pekeris}
+Pekeris, C.~L.,  1940, Direct method of interpretation in resistivity
+  prospecting: Geophysics, {\bf 5}, 31--42.
+\newblock (\href{https://doi.org/10.1190/1.1441791}{doi: 10.1190/1.1441791}).
+
+\bibitem[Raiche et~al., 2007]{ASEG.07.Raiche}
+Raiche, A., F. Sugeng, and G. Wilson,  2007, Practical {3D} {EM} inversion -
+  the {P223F} software suite: ASEG Technical Program Expanded Abstracts,  1--4.
+\newblock (\href{http://doi.org/10.1071/ASEG2007ab114}{doi:
+  10.1071/ASEG2007ab114}).
+
+\bibitem[Slichter, 1933]{PHY.33.Slichter}
+Slichter, L.~B.,  1933, The interpretation of the resistivity prospecting
+  method for horizontal structures: Physics, {\bf 4}, 307--322.
+\newblock (\href{http://doi.org/10.1063/1.1745198}{doi : 10.1063/1.1745198}).
+
+\bibitem[Sørensen and Christensen, 1994]{GEO.94.Sorensen}
+Sørensen, K.~I., and N.~B. Christensen,  1994, The fields from a finite
+  electrical dipole—a new computational approach: Geophysics, {\bf 59},
+  864--880.
+\newblock (\href{https://doi.org/10.1190/1.1443646}{10.1190/1.1443646}).
+
+\bibitem[Verma and Koefoed, 1973]{GP.73.Verma}
+Verma, R.~K., and O. Koefoed,  1973, A note on the linear filter method of
+  computing electromagnetic sounding curves: Geophysical Prospecting, {\bf 21},
+  70--76.
+\newblock (\href{http://doi.org/10.1111/j.1365-2478.1973.tb00015.x}{doi:
+  10.1111/j.1365-2478.1973.tb00015.x}).
+
+\bibitem[Werthmüller, 2017]{GEO.17.Werthmuller}
+Werthmüller, D.,  2017, An open-source full {3D} electromagnetic modeler for
+  {1D} {VTI} media in {P}ython: empymod: Geophysics, {\bf 82}, no. 6,
+  WB9--WB19.
+\newblock (\href{http://doi.org/10.1190/geo2016-0626.1}{doi:
+  10.1190/geo2016-0626.1}).
+
+\end{thebibliography}
 
 \end{document}
