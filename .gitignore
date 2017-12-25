@@ -11,9 +11,9 @@ __pycache__/
 uncomitted/
 notebooks/data/*.npz
 notebooks/data/*.npy
+notebooks/data/*.zip
+notebooks/data/*.npz
 figures/Figure_*.tif
-data/*.zip
-data/*.npz
 *.dat
 *.dir
 *.bak
