@@ -8,11 +8,12 @@
 *.bin
 .ipynb_checkpoints/
 __pycache__/
-uncomitted/
+uncommitted/
 notebooks/data/*.npz
 notebooks/data/*.npy
 notebooks/data/*.zip
 notebooks/data/*.npz
+notebooks/data/GPR/
 figures/Figure_*.tif
 *.dat
 *.dir
