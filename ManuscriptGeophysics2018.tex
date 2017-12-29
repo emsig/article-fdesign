@@ -134,35 +134,24 @@ GP.70.Koefoed}, who retook the task of direct interpretational methods with the
 introduction of raised kernel functions. DLF is, as such, an improvement of
 that approach, providing a faster and simpler method.
 
-% \subsection{Review}
-
 The introduction of linear filters to electromagnetic geophysics initiated a
 wealth of investigation, publications, and development of computer programs
 that extended and improved the method. A few dozen articles have been published
 in the 70s and 80s by Ghosh, Koefoed, Das, Anderson, and many others, the vast
-majority of it in the journal \emph{Geophysical Prospecting}.
-%  (see Figure~\ref{fig:authors})
-Another common name of DLF is \emph{fast Hankel transform} (FHT), popular
-because of the similarity of the name to the well known \emph{fast Fourier
-transform} (FFT). The name was introduced, as far as we can see, by
-\cite{GP.79.Johansen} in their article of the same name. However, the name FHT
-can be misleading as it has \emph{Hankel} in the name, but the DLF can also be
-applied to the Fourier transform (and other linear transforms).
-% \begin{figure}[tbp]
-%   \centering
-%   \fbox{\includegraphics[width=10cm]{figures/author-figure}}
-%     \caption{List by year of publications included in the review (year and
-%       first three letters of principal author).}
-%     \label{fig:authors}
-% \end{figure}
-Publications fall broadly into one or several of three categories: (1) new
-methods (application of DLF to new measurement techniques); (2) filter
-improvements (new filters or providing new or improved methods for the
-determination of filter coefficients); and (3) computational tools. The
-following is a brief review of the most relevant publications regarding DLF,
-without claiming completeness.
+majority of it in the journal \emph{Geophysical Prospecting}. Another common
+name of DLF is \emph{fast Hankel transform} (FHT), popular because of the
+similarity of the name to the well known \emph{fast Fourier transform} (FFT).
+The name was introduced, as far as we can see, by \cite{GP.79.Johansen} in
+their article of the same name. However, the name FHT can be misleading as it
+has \emph{Hankel} in the name, but the DLF can also be applied to the Fourier
+transform (and other linear transforms). Publications fall broadly into one or
+several of three categories: (1) new applications (extend the usage of DLF to
+other measurement techniques); (2) filter improvements (new filters or
+providing new or improved methods for the determination of filter
+coefficients); and (3) computational tools. The following is a brief review of
+the most relevant publications regarding DLF, without claiming completeness.
 
-\subsubsection{(1) New methods}
+\subsubsection{(1) New applications}
 
 Ghosh used the method originally for the computation of type curves for
 Schlumberger and Wenner resistivity soundings. He published the main results of
@@ -209,7 +198,7 @@ $J_{1/2}$ if applied to the Fourier sine/cosine transform), as all higher
 Bessel functions can be rewritten to only use these two. \cite{GP.94.Mohsen} is
 one of the rare cases which provides $J_2$ filter weights.
 
-\subsubsection{(3) Codes}
+\subsubsection{(3) Computational tools}
 
 The best known codes are likely the freely available ones by Anderson.
 \cite{USGS.73.Anderson} extends the method to transient responses, applying DLF
@@ -229,8 +218,6 @@ coefficients by \cite{GP.90.Christensen}. The latter is available upon request
 and was used, for instance, in all the open-source modeling and inversion
 routines of CSIRO in the Amira Project 223 \citep{ASEG.07.Raiche}. \newline
 
-% \subsection{Outline}
-
 All mentioned publications have in common that they were derived for direct
 current methods (DC) or low frequency methods, such as time-domain shallow EM
 methods (TEM), or controlled-source electromagnetics (CSEM), but not for high
@@ -241,9 +228,12 @@ designing tool readily available, they are available as a described method
 in articles or as code upon request by the author, if at all. The presented
 algorithm \texttt{fdesign} tries to fill this gap by providing the tools to
 design general or purpose-built filters using the direct matrix inversion
-method. After a brief overview of the methodology, the theory, and the code we
-show examples of its usage, presenting some new filters for both, CSEM and GPR
-data. The algorithm and many more examples of its usage can be found on
+method. The current article falls therefore into all three mentioned categories
+by applying DLF also to wave phenomena and providing new filters with the
+accompanying code. After a brief overview of the methodology, the theory, and
+the code we show examples of its usage, presenting some new filters for both,
+CSEM and GPR data. The algorithm and many more examples of its usage can be
+found on
 \href{https://github.com/empymod/article-fdesign}{github.com/empymod/article-fdesign}.
 The examples can be used as templates to design new filters.
 
