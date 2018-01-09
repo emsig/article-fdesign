@@ -3,43 +3,29 @@
 % \documentclass[paper]{geophysics}
 % \documentclass[paper, revised]{geophysics}
 % \documentclass[manuscript,revised]{geophysics}
+
 %%fakesection ===    PACKAGES & DEFINITIONS    ===
 % \usepackage{showframe}
 
 %% ~ ADDITIONAL PACKAGES TO GEOPHYSICS.CLS
-\DeclareGraphicsExtensions{.pdf,.png,.jpg}
-\usepackage{color}
-\usepackage{tabularx}
-\usepackage{colortbl}
-\usepackage{booktabs}
 \usepackage[USenglish]{babel}
 \usepackage[utf8]{inputenc}
 \usepackage{lmodern}
 \usepackage[T1]{fontenc}
 \usepackage{amssymb, amsmath, amsfonts}
 \usepackage{upquote}
+\usepackage[strings]{underscore}
 \usepackage[pdftex, final]{hyperref}
 \hypersetup{allcolors=blue, allbordercolors={0 0 .5}, colorlinks=true}
 
-\usepackage{listings}
-
-% Figure directory
+% Figures
+\DeclareGraphicsExtensions{.pdf,.png,.jpg}
 \renewcommand{\figdir}{./figures}
+
+% Own commands
 \usepackage{xspace}
 \newcommand{\empymod}{\texttt{empymod}\xspace}
-\usepackage[strings]{underscore}
-
-\definecolor{MyGray}{gray}{0.85}
-\newcolumntype{Y}{>{\columncolor{MyGray}\raggedleft\arraybackslash}r}
-\newcolumntype{W}{>{\raggedleft\arraybackslash}r}
-\newcolumntype{A}{>{\columncolor{MyGray}\raggedleft\arraybackslash}X}
-\newcolumntype{B}{>{\raggedleft\arraybackslash}X}
-
-\hyphenation{iso-tro-pic pe-ne-tra-ting}
-
-\newcommand{\rmk}[1]{\textbf{\color{red}{#1}}}
 \newcommand{\mr}[1]{\mathrm{#1}}
-\frenchspacing
 
 \begin{document}
 
