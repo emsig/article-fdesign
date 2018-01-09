@@ -13,7 +13,7 @@ to reproduce all the figures.
    Section. The stable release at the time of submission of `empymod` was
    [Version 1.5.0](https://github.com/empymod/empymod/releases/tag/v1.5.0)
    and of `empyscripts` was
-   [Version 0.1.2](https://github.com/empymod/empyscripts/releases/tag/v0.1.2).
+   [Version 0.2.0](https://github.com/empymod/empyscripts/releases/tag/v0.2.0).
 
 
 ## Note
