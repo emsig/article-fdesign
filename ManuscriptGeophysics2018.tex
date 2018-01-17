@@ -89,7 +89,7 @@ Evert C.\ Slob\footnotemark[3]%
 % (3) RESULTS
   The comparison of the presented 201\,pt filter with previously presented
   filters shows that it performs better for some standard CSEM cases. The
-  derivation of a longer 2001\,pt filter for a GPR example with 250\,MHz centre
+  derivation of a longer 2001\,pt filter for a GPR example with 250\,MHz center
   frequency proves that the filter method works also for wave phenomena, not
   only for diffusive EM fields.
 %
@@ -123,10 +123,10 @@ expression relating it to the field measurements can be obtained by
 mathematical processes.}'' However, until the introduction of DLF, these
 suggestions found no widespread use, likely because of the missing computer
 power to calculate the filter coefficients. He further states that credit goes
-to his Ph.D. supervisor Otto \cite{BK.68.Koefoed, GP.70.Koefoed}, who retook
-the task of direct interpretational methods with the introduction of raised
-kernel functions. DLF is, as such, an improvement of that approach, providing a
-faster and simpler method.
+to \cite{BK.68.Koefoed, GP.70.Koefoed}, who retook the task of direct
+interpretational methods with the introduction of raised kernel functions. DLF
+is, as such, an improvement of that approach, providing a faster and simpler
+method.
 
 The DLF technique is sometimes referred to as the \emph{fast Hankel transform}
 (FHT), popular because of the similarity of the name to the well known
@@ -211,7 +211,7 @@ industry standard, to which subsequent filters were compared.
 \cite{GEO.89.Anderson} presents a hybrid solution that uses either the DLF or a
 much slower but highly accurate adaptive-quadrature approach, which can also be
 used to measure the accuracy of the DLF. \cite{GEO.12.Key} presented codes for
-comparing the DLF approach with a speed optimized quadrature method call
+comparing the DLF approach with a speed optimized quadrature method called
 quadrature-with-extrapolation (QWE); despite its optimizations, QWE is still
 not as fast as DLF, but it remains valuable as an independent tool for testing
 the accuracy of particular filters for the DLF method. Other examples include
@@ -267,8 +267,8 @@ Hankel and the Fourier transforms for potential, diffusive, and wavefield
 modeling (hence from DC to GPR).
 
 Theoretically, it can be used to derive linear filters for any linear
-transform, as long as it is supplied with the input and outputs of a transform
-pair. Previous works have relied on using theoretical transforms pairs commonly
+transform, as long as it is supplied with the inputs and outputs of a transform
+pair. Previous works have relied on using theoretical transform pairs commonly
 found in tables of integral transforms. Here we follow a similar approach, but
 we also propose a new method where filters could be derived from accurately
 computed numerical transform pairs, such as those computed using quadrature
@@ -292,20 +292,20 @@ methods it is based upon are:
     $J_1$, and three transform pairs for each sine and cosine of often used
     functions are included in the routine, but any other transform pair can be
     provided as input.
-  \item More complex or more specific numerical transforms  pairs  can be
+  \item More complex or more specific numerical transform  pairs  can be
     provided instead of theoretical transform pairs by using the modeler
     \texttt{empymod}.
   \item \cite{GP.07.Kong} defines a \emph{good} filter as one that recovers
     \emph{weak} diffusive EM fields. In  \texttt{fdesign}, you can define a
     relative error level that defines up to what error an obtained result is
-    good or not. The optimization seeks to find smallest amplitude field that
-    is accurately modeled (i.e., minimizing the amplitude), but it has
-    additionally another mode, where it will maximize the abscissae $r$ of the
-    right-hand-side of the transform pair instead of minimizing the amplitude.
-    The two modes yield the same result in the general, simple case of fast
-    decaying transform pairs. However, for some complex models and specifically
-    for very high frequencies, maximizing $r$ will yield much better and more
-    consistent results.
+    good or not. The optimization seeks to find the smallest amplitude field
+    that is accurately modeled (i.e., minimizing the amplitude), but it has
+    additionally another mode, where it will maximize the output abscissae $r$
+    of the transform pair instead of minimizing the amplitude. The two modes
+    yield the same result in the general, simple case of fast decaying
+    transform pairs. However, for some complex models and specifically for very
+    high frequencies, maximizing $r$ will yield much better and more consistent
+    results.
   \item The algorithm can solve under-, equal-, and over-determined linear
     systems.
   \item The real or the imaginary part can be used for the inversion of complex
@@ -336,13 +336,13 @@ electromagnetics we often have to evaluate integrals of the form
   \label{eq:HankelInt}
 \end{equation}
 %
-where $l$ and $r$ denote evaluation values, and $K$ is the kernel function. In
-the specific case of the Hankel transform $l$ corresponds to wavenumber, $r$ to
-offset, and $K$ to Bessel functions; in the case of the Fourier transform $l$
-corresponds to frequency, $r$ to time, and $K$ to sine or cosine functions. In
-both cases it is an infinite integral which numerical integration is very
-time-consuming because of the slow decay of the kernel function and its
-oscillatory behaviour.
+where $l$ and $r$ denote input and output evaluation values, respectively, and
+$K$ is the kernel function. In the specific case of the Hankel transform $l$
+corresponds to wavenumber, $r$ to offset, and $K$ to Bessel functions; in the
+case of the Fourier transform $l$ corresponds to frequency, $r$ to time, and
+$K$ to sine or cosine functions. In both cases it is an infinite integral which
+numerical integration is very time-consuming because of the slow decay of the
+kernel function and its oscillatory behaviour.
 
 By substituting $r = e^x$ and $l = e^{-y}$ we get
 %
@@ -629,9 +629,10 @@ The lagged convolution version of DLF and the splined version of QWE were used
 in this comparison.)
 %
 \plot*{GPR}{width=\textwidth}{GPR example for the model given in (a) using
-  \texttt{empymod} with (b) the adaptive quadrature (QUAD) or with (c) a 2001\,pt digital linear filter (b). The
-  quadrature took about 11\,h 27\,min to calculate, whereas the filter took
-  2\,min 10\,s in parallel on 4 nodes, hence under 9\,min in total.}
+  \texttt{empymod} with (b) the adaptive quadrature (QUAD) or with (c) a
+  2001\,pt digital linear filter (b). QUAD took about 11\,h 27\,min to
+  calculate, whereas DLF took 2\,min 10\,s in parallel on 4 nodes, hence under
+  9\,min in total.}
 %
 
 Figure~\ref{fig:ftGPR} shows in (a)-(c) the real part of the frequency domain
