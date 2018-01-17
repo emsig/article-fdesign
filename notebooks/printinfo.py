@@ -1,7 +1,8 @@
 """
 Utility to print date, time, and version information.
 
-This script was heavily inspired by:
+Adjusted from https://github.com/empymod/example-notebooks, which in turn was
+heavily inspired by:
 
     - ipynbtools.py from qutip https://github.com/qutip
     - watermark.py from https://github.com/rasbt/watermark
@@ -11,10 +12,11 @@ This script was heavily inspired by:
 import sys
 import time
 import platform
+import multiprocessing
 import numpy
 import scipy
-import numexpr
 import IPython
+import empyscripts
 import empymod
 import matplotlib
 from IPython.display import HTML
@@ -38,22 +40,22 @@ def info():
     html += "<tr" + style1 + ">"
     html += "<td" + style2 + ">%s</td>" % empymod.__version__
     html += "<td" + style1 + ">empymod</td>"
+    html += "<td" + style2 + ">%s</td>" % numpy.__version__
+    html += "<td" + style1 + ">numpy</td>"
     html += "<td" + style2 + ">%s</td>" % platform.system()
     html += "<td" + style1 + ">OS</td>"
-    html += "<td" + style2 + ">%s</td>" % numexpr.detect_number_of_threads()
-    html += "<td" + style1 + ">CPU(s)</td>"
     html += "<td" + style2 + ">%s</td>" % IPython.__version__
     html += "<td" + style1 + ">IPython</td>"
     html += "</tr>"
 
-    # numpy, scipy, numexpr, matplotlib
+    # numpy, scipy, matplotlib
     html += "<tr" + style1 + ">"
-    html += "<td" + style2 + ">%s</td>" % numpy.__version__
-    html += "<td" + style1 + ">numpy</td>"
+    html += "<td" + style2 + ">%s</td>" % empyscripts.__version__
+    html += "<td" + style1 + ">empyscripts</td>"
     html += "<td" + style2 + ">%s</td>" % scipy.__version__
     html += "<td" + style1 + ">scipy</td>"
-    html += "<td" + style2 + ">%s</td>" % numexpr.__version__
-    html += "<td" + style1 + ">numexpr</td>"
+    html += "<td" + style2 + ">%s</td>" % multiprocessing.cpu_count()
+    html += "<td" + style1 + ">CPU(s)</td>"
     html += "<td" + style2 + ">%s</td>" % matplotlib.__version__
     html += "<td" + style1 + ">matplotlib</td>"
     html += "</tr>"
@@ -61,11 +63,6 @@ def info():
     # sys.version
     html += "<tr" + style1 + ">"
     html += "<td" + style1 + " colspan='8'>%s</td>" % sys.version
-    html += "</tr>"
-
-    # vml version
-    html += "<tr" + style2 + ">"
-    html += "<td" + style2 + " colspan='8'>%s</td>" % numexpr.get_vml_version()
     html += "</tr>"
 
     # Finish table
