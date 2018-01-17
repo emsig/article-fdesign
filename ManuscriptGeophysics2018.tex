@@ -376,10 +376,10 @@ minimize the required evaluations, either for $F(r)$ in what is referred to as
 DLF}.
 
 In the direct matrix inversion method for solving for the digital filter
-coefficients, equation \ref{eq:filtapprox} is cast as a linear system as
+coefficients, equation~\ref{eq:filtapprox} is cast as a linear system as
 follows. $\Delta$ and $\delta$ are preassigned scalar values and $r$ is a range
 of $M$ preassigned values $r_m$. The filter base coefficients $b_n$ are
-computed using equation \ref{eq:base} and an array of values for $l$ are
+computed using equation~\ref{eq:base} and an array of values for $l$ are
 computed using $l_{mn} = b_n/r_m$. The linear system's left hand side (LHS)
 matrix $\bf{A}$ has dimensions $M \times N$ with coefficients $A_{mn} =
 f(l_{mn})/r_n$ and the right hand side (RHS) vector $\bf{v}$ has elements $v_n
@@ -476,7 +476,7 @@ and Fourier transforms. As there is no difference in the procedure of the two,
 this should be sufficient to demonstrate the algorithm.
 
 \subsection{Design}
-Figure \ref{fig:201} shows the solution spaces of four consecutive inversion
+Figure~\ref{fig:201} shows the solution spaces of four consecutive inversion
 runs, where each run is a focus on a subsection of the previous run, indicated
 by the red square.
 %
@@ -514,7 +514,7 @@ detailed results in (c) and (d) it becomes obvious that it is a minimization
 problem that has to be solved stochastically, as there are solutions with 2
 orders of magnitude difference apparently randomly next to each other.
 
-Figure \ref{fig:201b} shows in (a) the filter values for $J_0$ and $J_1$ of the
+Figure~\ref{fig:201b} shows in (a) the filter values for $J_0$ and $J_1$ of the
 best 201 point filter obtained this way, and in (b) its right-hand-side
 solution. The black dots indicate negative values, from which it can seen that
 adjacent values are often alternating between positive and negative
@@ -545,14 +545,14 @@ to marine CSEM models used in \cite{GP.07.Kong}, \cite{GEO.12.Key}, as well as
 for a land EM case.
 
 Figure~\ref{fig:kongf5} compares the derived 201\,pt filter with the two
-half-spaces case used by \cite{GP.07.Kong} in his figure 5. The model consists
+half-spaces case used by \cite{GP.07.Kong} in his figure~5. The model consists
 of a $0.3125\,\Omega\,$m sea layer of infinite thickness above a subsurface
 $1\,\Omega\,$m half-space. The signal of a $1\,$Hz frequency $x$-directed
 electric source 50\,m above the interface is measured at an $x$-directed
 electric receiver at the interface.
 %
 \plot*{kongf5}{width=.9\textwidth}{(a) Results of different filters and QWE for
-  the model of figure 5 from \cite{GP.07.Kong} with the relative errors shown
+  the model of figure~5 from \cite{GP.07.Kong} with the relative errors shown
   in (b), using the QWE result. The relative error is meaningless from about
   15.5\,km onwards, as QWE failed as well for these very low amplitudes.}
 %
@@ -566,8 +566,8 @@ relative error is shown in (b), where the QWE result was taken as \emph{truth}.
 For offsets greater than roughly 15.5\,km the relative error becomes
 meaningless, as the QWE fails itself; this part is greyed out in the figure.
 
-Figure \ref{fig:keyf5}(a) considers the canonical CSEM model as used in
-\cite{GEO.12.Key} in his figure 5: a $0.303\,\Omega\,$m sea with depth of
+Figure~\ref{fig:keyf5}(a) considers the canonical CSEM model as used in
+\cite{GEO.12.Key} in his figure~5: a $0.303\,\Omega\,$m sea with depth of
 2\,km, a background resistivity of $1\,\Omega\,$m, in which a $100\,\Omega\,$m
 target layer of 100\,m thickness is embedded at 1000\,m below the seafloor.
 The source is located at 1990\,m and receivers are positioned on the seafloor.
@@ -578,7 +578,7 @@ The source is located at 1990\,m and receivers are positioned on the seafloor.
   orders of magnitude lower than the other filters.}
 %
 
-Figure \ref{fig:keyf5}(b) is a land case, with a background resistivity of
+Figure~\ref{fig:keyf5}(b) is a land case, with a background resistivity of
 $10\,\Omega\,$m, in which a $500\,\Omega\,$m target of 100\,m thickness is
 embedded at 1000\,m below the surface. The source depth is 0.5\,m and the
 receiver depth is 0.8\,m. In both cases the new filter \emph{Wer201} has
@@ -594,22 +594,67 @@ as the digital filters are purely real valued.
 It is very important to note again that other scenarios might yield very
 different error plots. Although the new 201\,pt filter proves to be very
 accurate for these three models, it might not be the best filter in other
-cases.  We also comment that while it is tempting to design very short length
+cases. To verify the applicability of the filter we run two different tests
+over a wide range of scenarios. Figure~\ref{fig:error} shows the relative
+errors of DLF using the filter \emph{Wer201} compared to QWE for a deep water
+model, a shallow water model, and a land model. The model consists of an air
+halfspace, a water layer in the first two examples, and a subsurface halfspace.
+Source depth is 1990\,m, 10\,m, and 0.5\,m in the deep, shallow, and land case,
+respectively. Receiver depth is 2000\,m, 100\,m, and 0.8\,m. The subsurface
+halfspace resistivity varies from 1 to 10, 100, and 1000\,$\Omega\,$m from the
+left to the right column. The error plots cover offsets from 50\,m to 20\,km on
+the x-axis, and 0.01\,Hz to 10\,Hz on the y-axis. It can be seen in the result
+that the filter is sufficiently precise for all practical CSEM cases, hence has
+generally an error far below 1\,\% (1e-2) in all cases. The exception are large
+offsets with relatively high frequencies, e.g., 10\,km offset with 8\,Hz.
+%
+\plot*{error}{width=\textwidth}{Relative error plots comparing the DLF
+  (\emph{Wer201}) with QWE for the three cases deep water (top row), shallow
+  water (middle row), and land (bottom row). The subsurface halfspace
+  resistivity varies from 1 to 1000\,$\Omega\,$m from the left column to the
+  right column; offsets vary from 50\,m to 20\,km, and frequencies vary from
+  0.01\,Hz to 10\,Hz. The DLF provides sufficiently accurate results for all
+  practical CSEM applications, only breaking down for large offsets with
+  relatively high frequencies. However, the signal is usually below the noise
+  level anyway in this region.}
+%
+
+Another error test is shown in Figure~\ref{fig:skindepth1}. It shows in (a) the
+amplitude of the analytical fullspace solution for a wide range of
+resistivities and frequencies: $\rho=$ 1e-10$\,\Omega\,$m to 1e10\,$\Omega\,$m,
+and $f =$ 1e-10\,Hz to 1e14\,Hz. In this case, the horizontal offset is set to
+the skin depth, and the vertical source-receiver separation to a tenth of it,
+where the skin depth is given by
+%
+\begin{equation}
+  z_\mr{skin} = \left[\omega \sqrt{\frac{\mu\varepsilon}{2}}
+  \sqrt{\left\{1 + \left(\frac{1}{\omega\varepsilon\rho}\right\}^2 \right) -1}
+  \right]^{-1} \, . \\
+  \label{eq:skin}
+\end{equation}
+%
+The contour lines in the figure show the magnitude of the offset: the line with
+0 is where the offset is 1\,m, the line with 3 where the offset is 1\,km, etc.
+The contour lines of the offset have a knee, after which they become almost
+independent of frequency. This is where the quasi static approximation breaks
+down, and wave phenomena become dominant. Subplot (b) shows the relative error
+of the DLF using the filter \emph{Wer201} compared to the analytical solution.
+It shows nicely that the filter can be used for all cases that are in the quasi
+static region, but not outside.
+%
+\plot*{skindepth1}{width=.8\textwidth}{(a) Amplitude of the analytical
+  fullspace solution for a wide range of resistivities and frequencies. The
+  contour lines show the power of the offset used for the calculation, where
+  the offset is set to the skin depth. (b) Relative error of the DLF compared
+  with the analytical solution. The filter \emph{Wer201} works well in the
+  diffusive limit, but fails when wave phenomena become dominant.}
+%
+
+We also comment that while it is tempting to design very short length
 filters (much less than about $N=100$) since shorter filters can greatly reduce
 EM simulation times, in our experience, shorter filters tend to be less general
 purpose than longer filters and we highly recommend thoroughly testing their
 accuracy for the desired range of data and model parameters.
-
-
-
-HERE figures for validity
-
-That line is where the quasistatic approximation breaks down,  where sigma =
-omega epsilon rather than being much greater.
-
-So the filters work well for diffusion, right up to the limit where the quasi
-static approximation breaks down. That’s a good observation to put in the
-paper.
 
 
 \subsection{Ground-penetrating radar}
@@ -660,7 +705,7 @@ The 2001\,pt filter was derived with the fullspace solution of a medium which
 is very similar to the layer in which source and receiver reside in our GPR
 example. To show that this filter can also be applied to different layer
 parameters we run a test where we swapped layers one and two of the model in
-Figure \ref{fig:GPR} (a). The resulting real and imaginary parts for the
+Figure~\ref{fig:GPR} (a). The resulting real and imaginary parts for the
 offsets 0.2\,m, 2.0\,m, and 3.0\,m are given in Figure~\ref{fig:ftGPR2nd}.
 %
 \plot*{ftGPR2nd}{width=\textwidth}{The real and imaginary parts of the
