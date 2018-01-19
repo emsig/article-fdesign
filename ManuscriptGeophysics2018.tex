@@ -29,8 +29,8 @@
 
 \begin{document}
 
-\title{A tool for designing digital filters for the Hankel and Fourier transforms in
-potential, diffusive, and wavefield modeling}
+\title{A tool for designing digital filters for the Hankel and Fourier
+transforms in potential, diffusive, and wavefield modeling}
 
 \renewcommand{\thefootnote}{\fnsymbol{footnote}}
 
@@ -597,16 +597,21 @@ accurate for these three models, it might not be the best filter in other
 cases. To verify the applicability of the filter we run two different tests
 over a wide range of scenarios. Figure~\ref{fig:error} shows the relative
 errors of DLF using the filter \emph{Wer201} compared to QWE for a deep water
-model, a shallow water model, and a land model. The model consists of an air
-halfspace, a water layer in the first two examples, and a subsurface halfspace.
-Source depth is 1990\,m, 10\,m, and 0.5\,m in the deep, shallow, and land case,
-respectively. Receiver depth is 2000\,m, 100\,m, and 0.8\,m. The subsurface
-halfspace resistivity varies from 1 to 10, 100, and 1000\,$\Omega\,$m from the
-left to the right column. The error plots cover offsets from 50\,m to 20\,km on
-the x-axis, and 0.01\,Hz to 10\,Hz on the y-axis. It can be seen in the result
-that the filter is sufficiently precise for all practical CSEM cases, hence has
-generally an error far below 1\,\% (1e-2) in all cases. The exception are large
-offsets with relatively high frequencies, e.g., 10\,km offset with 8\,Hz.
+model, a shallow water model, and a land model. The models consist of air
+(upper halfspace), a water layer in the first two examples, and a subsurface
+halfspace. Source depth is 1990\,m, 10\,m, and 0.5\,m in the deep, shallow, and
+land case, respectively. Receiver depth is 2000\,m, 100\,m, and 0.8\,m. The
+subsurface halfspace resistivity varies from 1 to 10, 100, and
+1000\,$\Omega\,$m from the left to the right column. The error plots cover
+offsets from 50\,m to 20\,km on the x-axis, and 0.01\,Hz to 10\,Hz on the
+y-axis. It can be seen in the result that the filter is sufficiently precise
+for all practical CSEM cases, hence has generally an error far below 1\,\%
+(1e-2) in all cases. The exception are large offsets with relatively high
+frequencies, e.g., 10\,km offset with 8\,Hz. In the shallow water case this
+zone has a very high error for subsurface resistivities of 1\,$\Omega\,$m and
+10\,$\Omega\,$m (yellow zones). However, this is due to the fact that the
+amplitudes of the signal for these offsets and frequencies are in the order of
+1e-25~V/m.
 %
 \plot*{error}{width=\textwidth}{Relative error plots comparing the DLF
   (\emph{Wer201}) with QWE for the three cases deep water (top row), shallow
@@ -614,9 +619,10 @@ offsets with relatively high frequencies, e.g., 10\,km offset with 8\,Hz.
   resistivity varies from 1 to 1000\,$\Omega\,$m from the left column to the
   right column; offsets vary from 50\,m to 20\,km, and frequencies vary from
   0.01\,Hz to 10\,Hz. The DLF provides sufficiently accurate results for all
-  practical CSEM applications, only breaking down for large offsets with
-  relatively high frequencies. However, the signal is usually below the noise
-  level anyway in this region.}
+  practical CSEM applications. The exception is in the shallow water case for
+  $\rho = 1\,\Omega\,$m and $10\,\Omega\,$m for large offsets and high
+  frequencies (yellow zones). However, the amplitudes in these regions are in
+  the order of 1e-25~V/m, and therefore far below the noise level.}
 %
 
 Another error test is shown in Figure~\ref{fig:skindepth1}. It shows in (a) the
@@ -677,13 +683,13 @@ filter. The calculation with DLF took under 9 minutes and is therefore roughly
 80 times faster than the calculation with QUAD, which took roughly 11 hours and
 27 minutes. Calculating the same model with QWE took 7 hours and 20 minutes.
 However, QWE uses in roughly 1/3 of the calculation internally QUAD in this
-example, see \cite{GEO.17.Werthmuller}. (Note that DLF was run in parallel
-using 4 threads at once, taking effectively only 2 minutes and 10 seconds to
+example, see \cite{GEO.17.Werthmuller}. Note that DLF was run in parallel using
+4 threads at once, taking effectively only 2 minutes and 10 seconds to
 calculate.
 % EMmod \citep{GEO.15.Hunziker} took for the same model about 18 hours 55
 % minutes, using a 61\,pt Gauss-Kronrod integration routine.
 The lagged convolution version of DLF and the splined version of QWE were used
-in this comparison.)
+in this comparison.
 %
 \plot*{GPR}{width=\textwidth}{GPR example for the model given in (a) using
   \texttt{empymod} with (b) the adaptive quadrature (QUAD) or with (c) a

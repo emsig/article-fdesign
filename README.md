@@ -1,6 +1,8 @@
-# Work in progress. Add title here.
+# A tool for designing digital filters for the Hankel and Fourier transforms in potential, diffusive, and wavefield modeling
 
-> Add full citation here.
+> Werthmüller, D., K. Key, and E. Slob, 2018, A tool for designing digital
+> filters for the Hankel and Fourier transforms in potential, diffusive, and
+> wavefield modeling: Submitted to Geophysics.
 
 ## Manuscript for Geophysics paper
 
