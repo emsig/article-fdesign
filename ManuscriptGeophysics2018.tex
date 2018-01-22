@@ -561,10 +561,11 @@ amplitudes than the 241\,pt filter from \cite{GP.07.Kong}, the 201\,pt filter
 from \cite{GEO.12.Key}, and the 801\,pt filter from \cite{TMS.82.Anderson}
 (Wer201, Kong241, Key201, and And801, respectively). It behaves equally well as
 the quadrature with extrapolation (QWE), for which we used a 51\,pt quadrature
-with relative and absolute tolerance of 1e-12 and 1e-30, respectively. The
-relative error is shown in (b), where the QWE result was taken as \emph{truth}.
-For offsets greater than roughly 15.5\,km the relative error becomes
-meaningless, as the QWE fails itself; this part is greyed out in the figure.
+with relative and absolute tolerance of $10^{-12}$ and $10^{-30}$,
+respectively. The relative error is shown in (b), where the QWE result was
+taken as \emph{truth}. For offsets greater than roughly 15.5\,km the relative
+error becomes meaningless, as the QWE fails itself; this part is greyed out in
+the figure.
 
 Figure~\ref{fig:keyf5}(a) considers the canonical CSEM model as used in
 \cite{GEO.12.Key} in his figure~5: a $0.303\,\Omega\,$m sea with depth of
@@ -606,12 +607,12 @@ subsurface halfspace resistivity varies from 1 to 10, 100, and
 offsets from 50\,m to 20\,km on the x-axis, and 0.01\,Hz to 10\,Hz on the
 y-axis. It can be seen in the result that the filter is sufficiently precise
 for all practical CSEM cases, hence has generally an error far below 1\,\%
-(1e-2) in all cases. The exception are large offsets with relatively high
+($10^{-2}$) in all cases. The exception are large offsets with relatively high
 frequencies, e.g., 10\,km offset with 8\,Hz. In the shallow water case this
 zone has a very high error for subsurface resistivities of 1\,$\Omega\,$m and
 10\,$\Omega\,$m (yellow zones). However, this is due to the fact that the
 amplitudes of the signal for these offsets and frequencies are in the order of
-1e-25~V/m.
+$10^{-25}\,$V/m.
 %
 \plot*{error}{width=\textwidth}{Relative error plots comparing the DLF
   (\emph{Wer201}) with QWE for the three cases deep water (top row), shallow
@@ -622,38 +623,41 @@ amplitudes of the signal for these offsets and frequencies are in the order of
   practical CSEM applications. The exception is in the shallow water case for
   $\rho = 1\,\Omega\,$m and $10\,\Omega\,$m for large offsets and high
   frequencies (yellow zones). However, the amplitudes in these regions are in
-  the order of 1e-25~V/m, and therefore far below the noise level.}
+  the order of $10^{-25}\,$V/m, and therefore far below the noise level.}
 %
 
 Another error test is shown in Figure~\ref{fig:skindepth1}. It shows in (a) the
 amplitude of the analytical fullspace solution for a wide range of
-resistivities and frequencies: $\rho=$ 1e-10$\,\Omega\,$m to 1e10\,$\Omega\,$m,
-and $f =$ 1e-10\,Hz to 1e14\,Hz. In this case, the horizontal offset is set to
-the skin depth, and the vertical source-receiver separation to a tenth of it,
-where the skin depth is given by \citep[e.g., ][ equation~1.49]{B.SEG.88.Ward}
+resistivities and frequencies: $\rho=$ $10^{-10}\,\Omega\,$m to
+$10^{10}\,\Omega\,$m, and $f =10^{-10}$\,Hz to $10^{14}$\,Hz. In this case, the
+horizontal offset is set to the skin depth, and the vertical source-receiver
+separation to a tenth of it, where the skin depth is given by \citep[e.g., ][
+equation~1.49]{B.SEG.88.Ward}
 %
 \begin{equation}
-  z_\mr{skin} = \left[\omega \sqrt{\frac{\mu\varepsilon}{2}}
-  \sqrt{\left\{1 + \left(\frac{1}{\omega\varepsilon\rho}\right\}^2 \right) -1}
-  \right]^{-1} \, . \\
+  z_\mr{skin} = \left\{\frac{\omega^2 \varepsilon\mu}{2}
+    \left[ \sqrt{1 + \frac{1}{\left(\omega\varepsilon\rho\right)^2}} -1\right]
+  \right\}^{-1/2} \, . \\
   \label{eq:skin}
 \end{equation}
 %
-The contour lines in the figure show the magnitude of the offset: the line with
-0 is where the offset is 1\,m, the line with 3 where the offset is 1\,km, etc.
-The contour lines of the offset have a knee, after which they become almost
-independent of frequency. This is where the quasi static approximation breaks
-down, and wave phenomena become dominant. Subplot (b) shows the relative error
-of the DLF using the filter \emph{Wer201} compared to the analytical solution.
-It shows nicely that the filter can be used for all cases that are in the quasi
-static region, but not outside.
+The grey contour lines in the figure show the magnitude of the offset: the line
+with 0 is where the offset is 1\,m, the line with 3 where the offset is 1\,km,
+etc. The contour lines of the offset have a knee, after which they become
+almost independent of frequency. This is where the quasi static approximation
+breaks down, and wave phenomena become dominant. The red line indicates where
+$\omega\varepsilon\rho = 1$. Subplot (b) shows the relative error of the DLF
+using the filter \emph{Wer201} compared to the analytical solution. It shows
+nicely that the filter can be used for all cases that are in the quasi static
+region, but not outside.
 %
 \plot*{skindepth1}{width=.8\textwidth}{(a) Amplitude of the analytical
   fullspace solution for a wide range of resistivities and frequencies. The
   contour lines show the power of the offset used for the calculation, where
   the offset is set to the skin depth. (b) Relative error of the DLF compared
   with the analytical solution. The filter \emph{Wer201} works well in the
-  diffusive limit, but fails when wave phenomena become dominant.}
+  diffusive limit, but fails when wave phenomena become dominant. The red
+ line shows where $\omega\varepsilon\rho = 1$.}
 %
 
 We also comment that while it is tempting to design very short length
