@@ -73,25 +73,26 @@ Evert C.\ Slob\footnotemark[3]%
   The open-source code \texttt{fdesign} makes it possible to design digital
   linear filters for the Hankel and Fourier transforms used in potential-,
   diffusive-, and wavefield modeling. Digital filters can be derived for any
-  electromagnetic method, such as methods in the diffusive limits (DC, CSEM) as
-  well as methods using higher frequency content (GPR, acoustic and elastic
-  wavefields).
+  electromagnetic method, such as methods in the diffusive limits (direct
+  current, controlled-source electromagnetics) as well as methods using higher
+  frequency content (ground-penetrating radar, acoustic and elastic wavefields).
 %
 % (2) METHODOLOGY
   The direct matrix inversion method is used for the derivation of the filter
   values, and a brute-force inversion is carried out over the defined spacing
   and shifting values of the filter basis. Included or user-provided
   theoretical transform pairs are used for the inversion. Alternatively, one
-  can provide 1D subsurface models that will be computed with a precise
-  quadrature method using the EM modeler \texttt{empymod} to generate
-  numerical transform pairs.
+  can provide layered subsurface models that will be computed with a precise
+  quadrature method using the electromagnetic modeler \texttt{empymod} to
+  generate numerical transform pairs.
 %
 % (3) RESULTS
   The comparison of the presented 201\,pt filter with previously presented
-  filters shows that it performs better for some standard CSEM cases. The
-  derivation of a longer 2001\,pt filter for a GPR example with 250\,MHz center
-  frequency proves that the filter method works also for wave phenomena, not
-  only for diffusive EM fields.
+  filters shows that it performs better for some standard controlled-source
+  electromagnetic cases. The derivation of a longer 2001\,pt filter for a
+  ground-penetrating radar example with 250\,MHz center frequency proves that
+  the filter method works also for wave phenomena, not only for diffusive
+  electromagnetic fields.
 %
 % (4) CONCLUSIONS
   The presented algorithm provides a tool to create problem specific digital
@@ -444,15 +445,15 @@ The basic steps are as follows:
 Figure~\ref{fig:InvCrit} shows the differences between the different
 minimization approaches; in (a) for a conventional, fast decaying transform
 pair; and in (b) for a more complex, high frequency layered model. The circles
-show the minimum amplitude used in previous approaches. This criteria is not
-ideal, as it is subject to some random fluctuations and also depends on the
-choice of $r$. The squares show the minimum amplitude given a certain
-acceptable error, and the diamonds show the maximum $r$ given a certain
-acceptable error (the inversion is a minimization process, it therefore
-minimizes $1/r$, not $r$). In simple cases the minimum amplitude given an
-acceptable error and the maximum $r$ given an acceptable error will yield the
-same result. However, in complex cases the maximum $r$ is more consistent and
-therefore a much better criteria.
+show the minimum amplitude used in previous approaches. This criterion is not
+ideal, as it is subject to some random fluctuations and depends on the choice
+of $r$. The squares show the minimum amplitude given a certain acceptable
+error, and the diamonds show the maximum $r$ given a certain acceptable error
+(the inversion is a minimization process, it therefore minimizes $1/r$, not
+$r$). In simple cases the minimum amplitude given an acceptable error and the
+maximum $r$ given an acceptable error will yield the same result. However, in
+complex cases the maximum $r$ is more consistent and therefore a much better
+criterion.
 %
 \plot*{InvCrit}{width=.9\textwidth}{(a) A regular RHS curve of a transform pair
   with a purely decaying function. Minimum amplitude or maximum $r$ yield the
@@ -526,9 +527,9 @@ contributions.
 %
 
 Designing filters is to a large extent trial and error. All input variables
-influence the outcome, and often  a good filter is found by shear luck of
+influence the outcome, and often  a good filter is found by sheer luck of
 choosing the right starting parameters. Each of the input parameters has an
-effect to the outcome. It also depends heavily on the transform pairs
+effect on the outcome. It also depends heavily on the transform pairs
 $f_\mr{I;C}$; functions that decay rapidly are generally better, as noted by
 earlier authors \citep[e.g.][]{USGS.75.Anderson}. It also depends on the filter
 length, and obviously heavily on the spacing and shift values. Another
@@ -545,14 +546,14 @@ to marine CSEM models used in \cite{GP.07.Kong}, \cite{GEO.12.Key}, as well as
 for a land EM case.
 
 Figure~\ref{fig:kongf5} compares the derived 201\,pt filter with the two
-half-spaces case used by \cite{GP.07.Kong} in his figure~5. The model consists
+half-spaces case used by \cite{GP.07.Kong} in his Figure~5. The model consists
 of a $0.3125\,\Omega\,$m sea layer of infinite thickness above a subsurface
 $1\,\Omega\,$m half-space. The signal of a $1\,$Hz frequency $x$-directed
 electric source 50\,m above the interface is measured at an $x$-directed
 electric receiver at the interface.
 %
 \plot*{kongf5}{width=.9\textwidth}{(a) Results of different filters and QWE for
-  the model of figure~5 from \cite{GP.07.Kong} with the relative errors shown
+  the model of Figure~5 from \cite{GP.07.Kong} with the relative errors shown
   in (b), using the QWE result. The relative error is meaningless from about
   15.5\,km onwards, as QWE failed as well for these very low amplitudes.}
 %
@@ -568,7 +569,7 @@ error becomes meaningless, as the QWE fails itself; this part is greyed out in
 the figure.
 
 Figure~\ref{fig:keyf5}(a) considers the canonical CSEM model as used in
-\cite{GEO.12.Key} in his figure~5: a $0.303\,\Omega\,$m sea with depth of
+\cite{GEO.12.Key} in his Figure~5: a $0.303\,\Omega\,$m sea with depth of
 2\,km, a background resistivity of $1\,\Omega\,$m, in which a $100\,\Omega\,$m
 target layer of 100\,m thickness is embedded at 1000\,m below the seafloor.
 The source is located at 1990\,m and receivers are positioned on the seafloor.
@@ -637,19 +638,21 @@ equation~1.49]{B.SEG.88.Ward}
 \begin{equation}
   z_\mr{skin} = \left\{\frac{\omega^2 \varepsilon\mu}{2}
     \left[ \sqrt{1 + \frac{1}{\left(\omega\varepsilon\rho\right)^2}} -1\right]
-  \right\}^{-1/2} \, . \\
+  \right\}^{-1/2} \, , \\
   \label{eq:skin}
 \end{equation}
 %
-The grey contour lines in the figure show the magnitude of the offset: the line
-with 0 is where the offset is 1\,m, the line with 3 where the offset is 1\,km,
-etc. The contour lines of the offset have a knee, after which they become
-almost independent of frequency. This is where the quasi static approximation
-breaks down, and wave phenomena become dominant. The red line indicates where
-$\omega\varepsilon\rho = 1$. Subplot (b) shows the relative error of the DLF
-using the filter \emph{Wer201} compared to the analytical solution. It shows
-nicely that the filter can be used for all cases that are in the quasi static
-region, but not outside.
+where we used in the example $10\,\varepsilon_0$ for the electric permittivity
+and $\mu_0$ for the magnetic permeability; $\omega = 2\pi f$. The grey contour
+lines in the figure show the magnitude of the offset: the line with 0 is where
+the offset is 1\,m, the line with 3 where the offset is 1\,km, etc. The contour
+lines of the offset have a knee, after which they become almost independent of
+frequency. This is where the quasi static approximation breaks down, and wave
+phenomena become dominant. The red line indicates where $\omega\varepsilon\rho
+= 1$. Subplot (b) shows the relative error of the DLF using the filter
+\emph{Wer201} compared to the analytical solution. It shows nicely that the
+filter can be used for all cases that are in the quasi static region, but not
+outside.
 %
 \plot*{skindepth1}{width=.8\textwidth}{(a) Amplitude of the analytical
   fullspace solution for a wide range of resistivities and frequencies. The
@@ -675,20 +678,21 @@ given in subplot (a). The filter used for this example for the Hankel transform
 is a 2001\,pt filter, derived with the fullspace solution with $f=500\,$MHz for
 the inversion and the check of quality. The whole space solution used
 resistivity $200\,\Omega\,$m, relative permittivity $\varepsilon_\mr{r}=10$,
-and permeability $\mu_\mr{r}=1$. The source and receiver vertical separation is
-1\,m. For the Fourier transform a 4096\,pt FFT was used with regularly spaced
-frequencies from 0.5\,MHz to 850\,MHz and then zero-padded up to 2048\,MHz. The
-frequency result is multiplied with a Ricker wavelet with a center frequency of
-250\,MHz, and a gain function ($1 + |t^3|, t$ in ns) is applied. Subplot (b)
-shows the result when using the adaptive quadrature (QUAD) option of
-\texttt{empymod}, which uses the QAGSE routine from the Fortran QUADPACK
-library. Subplot (c) shows the result using DLF with the new 2001\,pt digital
-filter. The calculation with DLF took under 9 minutes and is therefore roughly
-80 times faster than the calculation with QUAD, which took roughly 11 hours and
-27 minutes. Calculating the same model with QWE took 7 hours and 20 minutes.
-However, QWE uses in roughly 1/3 of the calculation internally QUAD in this
-example, see \cite{GEO.17.Werthmuller}. Note that DLF was run in parallel using
-4 threads at once, taking effectively only 2 minutes and 10 seconds to
+and permeability $\mu_\mr{r}=1$. Using Equation~\ref{eq:skin} yields a skin
+depth of roughly 3.6\,m for these parameters. The source and receiver vertical
+separation is 1\,m. For the Fourier transform a 4096\,pt FFT was used with
+regularly spaced frequencies from 0.5\,MHz to 850\,MHz and then zero-padded up
+to 2048\,MHz. The frequency result is multiplied with a Ricker wavelet with a
+center frequency of 250\,MHz, and a gain function ($1 + |t^3|, t$ in ns) is
+applied. Subplot (b) shows the result when using the adaptive quadrature (QUAD)
+option of \texttt{empymod}, which uses the QAGSE routine from the Fortran
+QUADPACK library. Subplot (c) shows the result using DLF with the new 2001\,pt
+digital filter. The calculation with DLF took under 9 minutes and is therefore
+roughly 80 times faster than the calculation with QUAD, which took roughly 11
+hours and 27 minutes. Calculating the same model with QWE took 7 hours and 20
+minutes. However, QWE uses in roughly 1/3 of the calculation internally QUAD in
+this example, see \cite{GEO.17.Werthmuller}. Note that DLF was run in parallel
+using 4 threads at once, taking effectively only 2 minutes and 10 seconds to
 calculate.
 % EMmod \citep{GEO.15.Hunziker} took for the same model about 18 hours 55
 % minutes, using a 61\,pt Gauss-Kronrod integration routine.

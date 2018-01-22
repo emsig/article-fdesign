@@ -11,7 +11,7 @@ to reproduce all the figures.
 
 ## History
 
-1. First submitted ??/01/2018 to Geophysics for the Software & Algorithms
+1. First submitted 22/01/2018 to Geophysics for the Software & Algorithms
    Section. The stable release at the time of submission of `empymod` was
    [Version 1.5.0](https://github.com/empymod/empymod/releases/tag/v1.5.0)
    and of `empyscripts` was
