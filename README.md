@@ -23,7 +23,7 @@ to reproduce all the figures.
    `empymod` was
    [Version 1.5.0](https://github.com/empymod/empymod/releases/tag/v1.5.0)
    and of `empyscripts` was
-   [Version 0.3.0](https://github.com/empymod/empyscripts/releases/tag/v0.2.0).
+   [Version 0.3.0](https://github.com/empymod/empyscripts/releases/tag/v0.3.0).
    There is no difference in the article between the first and the second
    submission. In the first submission only the file `fdesign.py` was submitted
    as source code to Geophysics. The second submission contains a zip-file with
