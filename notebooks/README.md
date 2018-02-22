@@ -15,5 +15,3 @@ Not featured in the paper:
 - **Filter-wer201-SineCosine.ipynb**: Creation of 201 pt of sine/cosine filter.
 - **Filter-wer201.ipynb**: Creation of 201 pt J0/J1 filter.
 - **GPR-Figure-RPD.ipynb**: Plot relative percentage difference of GPR result.
-
-The file printinfo.py is a small routine to print system- and version-info.
