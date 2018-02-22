@@ -33,6 +33,10 @@ to reproduce all the figures.
 
 ## Instructions to reproduce the figures with the zip-file provided by the SEG
 
+The piece of code related to the publication is `fdesign.py`, located in the
+folder `notebooks/empyscripts` in the zip-file or in the folder `empyscripts`
+on https://github.com/empymod/empyscripts.
+
 - The zip-file provided by the SEG contains all files required to reproduce the
   figures of the article.
 - Have a look at https://empymod.github.io for the latest version of `empymod`
