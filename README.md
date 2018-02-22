@@ -76,9 +76,10 @@ Some comments regarding `GPR-create-data.ipynb`:
   `EMmod` as well (see http://software.seg.org/2015/0001).
 - If you want to run the whole file, including the cell for `EMmod`, the whole
   script will take likely a day to run.
-- The data-files are provided in the notebooks/data-directory, so you don't
-  have to run `GPR-create-data.ipynb` in order to run `GPR-Figure.ipynb`
-  and `GPR-f-t.ipynb`.
+- The required data-zips are provided in the `notebooks/data`-directory on
+  https://github.com/empymod/article-fdesign, so you can get them there instead
+  of running `GPR-create-data.ipynb` in order to run `GPR-Figure.ipynb` and
+  `GPR-f-t.ipynb`.
 
 More notebooks (and maintained versions of the above ones) can be found on
 https://github.com/empymod/article-fdesign.
