@@ -47,7 +47,9 @@ on https://github.com/empymod/empyscripts.
   contains a script to convert these ASCII files into the required binary
   format. In order to reproduce all figures you have therefore to run first
   the command
+  
       python create_binaries.py
+      
   in a terminal in the directory `fdesign/notebooks`.
 - Have a look at https://empymod.github.io for the latest version of `empymod`
   and `empyscripts`, further instructions, the manual, and many more examples
