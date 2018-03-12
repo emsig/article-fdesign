@@ -19,17 +19,20 @@ to reproduce all the figures.
    and of `empyscripts` was
    [Version 0.2.0](https://github.com/empymod/empyscripts/releases/tag/v0.2.0).
 
-2. Re-submitted 22/02/2018. The stable release at the time of submission of
-   `empymod` was
-   [Version 1.5.0](https://github.com/empymod/empymod/releases/tag/v1.5.0)
-   and of `empyscripts` was
-   [Version 0.3.0](https://github.com/empymod/empyscripts/releases/tag/v0.3.0).
-   There is no difference in the article between the first and the second
-   submission. In the first submission only the file `fdesign.py` was submitted
-   as source code to Geophysics. The second submission contains a zip-file with
-   the current version of `empymod` and `empyscripts` as well as all the
-   notebooks to reproduce the figures.
+    * Re-submitted 22/02/2018. The stable release at the time of submission of
+      `empymod` was
+      [Version 1.5.0](https://github.com/empymod/empymod/releases/tag/v1.5.0)
+      and of `empyscripts` was
+      [Version  0.3.0](https://github.com/empymod/empyscripts/releases/tag/v0.3.0).
+      There is no difference in the article between the first and the second
+      submission. In the first submission only the file `fdesign.py` was
+      submitted as source code to Geophysics. The second submission contains a
+      zip-file with the current version of `empymod` and `empyscripts` as well
+      as all the notebooks to reproduce the figures.
 
+    * Re-submitted 12/03/2018. The only difference is that all binary files
+      were replaced by plain ASCII files, due to restrictions by the SEG, and a
+      routine to convert the ASCII files into the binary format was added.
 
 ## Instructions to reproduce the figures with the zip-file provided by the SEG
 
@@ -38,7 +41,14 @@ folder `notebooks/empyscripts` in the zip-file or in the folder `empyscripts`
 on https://github.com/empymod/empyscripts.
 
 - The zip-file provided by the SEG contains all files required to reproduce the
-  figures of the article.
+  figures of the article. However, SEG does not permit the distribution of
+  binary files. Therefore, the digital linear filters and the inversion results
+  used in some of the plots are provided in plain ASCII files. The zip-file
+  contains a script to convert these ASCII files into the required binary
+  format. In order to reproduce all figures you have therefore to run first
+  the command
+      python create_binaries.py
+  in a terminal in the directory `fdesign/notebooks`.
 - Have a look at https://empymod.github.io for the latest version of `empymod`
   and `empyscripts`, further instructions, the manual, and many more examples
   and information.
