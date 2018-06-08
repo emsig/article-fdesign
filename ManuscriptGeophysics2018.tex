@@ -1,8 +1,8 @@
 % \documentclass[manuscript]{geophysics}
-\documentclass[paper,twocolumn,twoside]{geophysics}
+% \documentclass[paper,twocolumn,twoside]{geophysics}
 % \documentclass[paper]{geophysics}
 % \documentclass[paper, revised]{geophysics}
-% \documentclass[manuscript,revised]{geophysics}
+\documentclass[manuscript,revised]{geophysics}
 
 %%fakesection ===    PACKAGES & DEFINITIONS    ===
 % \usepackage{showframe}
@@ -34,34 +34,35 @@ transforms in potential, diffusive, and wavefield modeling}
 
 \renewcommand{\thefootnote}{\fnsymbol{footnote}}
 
-\ms{GEO-2018-0069}
+\ms{GEO-2018-0069.R2}
 
 \address{
-\footnotemark[1]Instituto Mexicano del Petróleo,
-Eje Central Lázaro Cárdenas Norte 152,
-Col. San Bartolo Atepehuacan C.P. 07730,
-Ciudad de México, México,
-E-mail: \href{mailto:dieter@werthmuller.org}{Dieter@Werthmuller.org};
-\footnotemark[2]Lamont-Doherty Earth Observatory, Columbia University,
-305C Oceanography,
-61 Route 9W, PO Box 1000,
-Palisades NY 10964-8000 US,
-E-mail: \href{mailto:KKey@ldeo.columbia.edu}{KKey@ldeo.columbia.edu};
-\footnotemark[3]TU Delft,
-Building 23,
-Stevinweg 1 / PO-box 5048,
-2628 CN Delft,
-E-mail: \href{mailto:E.C.Slob@tudelft.nl}{E.C.Slob@tudelft.nl}.}
+% \footnotemark[1]TU Delft,
+% Building 23,
+% Stevinweg 1 / PO-box 5048,
+% 2628 CN Delft,
+% E-mail: \href{mailto:E.C.Slob@tudelft.nl}{E.C.Slob@tudelft.nl};
+% \footnotemark[2]Instituto Mexicano del Petróleo,
+% Eje Central Lázaro Cárdenas Norte 152,
+% Col. San Bartolo Atepehuacan C.P. 07730,
+% Ciudad de México, México,
+% E-mail: \href{mailto:dieter@werthmuller.org}{Dieter@Werthmuller.org};
+% \footnotemark[3]Lamont-Doherty Earth Observatory, Columbia University,
+% 305C Oceanography,
+% 61 Route 9W, PO Box 1000,
+% Palisades NY 10964-8000 US,
+% E-mail: \href{mailto:KKey@ldeo.columbia.edu}{KKey@ldeo.columbia.edu}.
+}
 
 
 \author{%
-Dieter Werthmüller\footnotemark[1], %
-Kerry Key\footnotemark[2], and %
-Evert C.\ Slob\footnotemark[3]%
+% Dieter Werthmüller\footnotemark[1]\footnotemark[2], %
+% Kerry Key\footnotemark[3], and %
+% Evert C.\ Slob\footnotemark[1]%
 }
 
 \footer{}
-\lefthead{Werthmüller et al.}
+\lefthead{}%Werthmüller et al.}
 \righthead{Digital filter designing tool}
 
 \maketitle
@@ -364,27 +365,29 @@ where $h$ is the digital linear filter, and the logarithmically spaced filter
 abscissae is a function of the spacing $\Delta$ and the shift $\delta$,
 %
 \begin{equation}
-  b_n = \exp\left\{\Delta(-N/2+n) + \delta\right\} \ .
+  b_n = \exp\left\{\Delta(-\lfloor{(N+1)/2\rfloor}+n) + \delta\right\} \ .
   \label{eq:base}
 \end{equation}
 %
-From equation~\ref{eq:filtapprox} it can be seen that the filter method
-requires $N$ evaluations at each $r$. For example, to calculate the frequency
-domain result for 100 offsets with a 201\,pt filter requires 20,100 evaluations
-in the wavenumber domain. This is why the DLF often uses interpolation to
-minimize the required evaluations, either for $F(r)$ in what is referred to as
-\emph{lagged convolution DLF}, or for $f(l)$, which we here call \emph{splined
-DLF}.
+\new{Note to reviewers: In equation~\ref{eq:base} $N/2$ changed to
+$\lfloor{(N+1)/2\rfloor}$.} From equation~\ref{eq:filtapprox} it can be
+seen that the filter method requires $N$ evaluations at each $r$. For example,
+to calculate the frequency domain result for 100 offsets with a 201\,pt filter
+requires 20,100 evaluations in the wavenumber domain. This is why the DLF often
+uses interpolation to minimize the required evaluations, either for $F(r)$ in
+what is referred to as \emph{lagged convolution DLF}, or for $f(l)$, which we
+here call \emph{splined DLF}.
 
 In the direct matrix inversion method for solving for the digital filter
-coefficients, equation~\ref{eq:filtapprox} is cast as a linear system as
-follows. $\Delta$ and $\delta$ are preassigned scalar values and $r$ is a range
-of $M$ preassigned values $r_m$. The filter base coefficients $b_n$ are
-computed using equation~\ref{eq:base} and an array of values for $l$ are
-computed using $l_{mn} = b_n/r_m$. The linear system's left hand side (LHS)
-matrix $\bf{A}$ has dimensions $M \times N$ with coefficients $A_{mn} =
-f(l_{mn})/r_n$ and the right hand side (RHS) vector $\bf{v}$ has elements $v_n
-= F(r_n)$. The resulting linear system
+coefficients, equation~\ref{eq:filtapprox} is cast as a linear system\old{ as
+follows.}\new{, where} $\Delta$ and $\delta$ are preassigned scalar values and
+$r$ is a range of $M$ preassigned values $r_m$. The filter base coefficients
+$b_n$ are computed using equation~\ref{eq:base} and an array of values for $l$
+are computed using $l_{mn} = b_n/r_m$. The linear system's left hand side (LHS)
+matrix $\bf{A}$ has dimensions $M \times N$ with coefficients \old{$A_{mn} =
+f(l_{mn})/r_n$}\new{$A_{mn} = f(l_{mn})/r_m$} and the right hand side (RHS)
+vector $\bf{v}$ has elements \old{$v_n = F(r_n)$}\new{$v_m = F(r_m)$}. The
+resulting linear system
 %
 \begin{equation}
   \bf{A}\bf{h} = \bf{v}
@@ -415,20 +418,28 @@ specified.
 The basic steps are as follows:
 \begin{enumerate}
   \item Evaluate RHS of check-function $f_\mr{C}$:\newline
-        $d_\mr{R} = f_\mr{C}.\mr{rhs}(r)$
-  \item Loop over each value $\Delta_i$, $\delta_j$ (brute force):
+    \old{$d_\mr{R} = f_\mr{C}.\mr{rhs}(r)$}\\
+    \new{$d_\mr{R} = f_\mr{C}^\mr{rhs}(r)$}
+  \item Loop over each value $\Delta_i$, $\delta_j$ (brute force\new{;
+      parameters on the left-hand side are overwritten where $i$, $j$
+      are not mentioned}):
     \begin{enumerate}
       \item Calculate filter base:\newline
-        $b_n = \exp\left\{\Delta_i(-N/2+n) + \delta_j\right\}$
+        \old{$b_n = \exp\left\{\Delta_i(-N/2+n) + \delta_j\right\}$}\\
+        \new{$b_n = \exp\left\{\Delta_i(-\lfloor{(N+1)/2\rfloor}+n) +
+      \delta_j\right\}$}
       \item Get required RHS and LHS evaluation points:\newline
         $r_\mr{I} = p(b, N)$\newline
         $l_\mr{I} = b/r_\mr{I}$
       \item Invert for filter coefficients:\newline
-        $J_{ij} = \mr{solve}(f_\mr{I}.\mr{lhs}(l_\mr{I}),
-        f_\mr{I}.\mr{rhs}(r_\mr{I}))$
+        \old{$J_{ij} = \mr{solve}(f_\mr{I}.\mr{lhs}(l_\mr{I}),
+        f_\mr{I}.\mr{rhs}(r_\mr{I}))$}\\
+        \new{$J = \mr{solve}\left[f_\mr{I}^\mr{lhs}(l_\mr{I}),
+        f_\mr{I}^\mr{rhs}(r_\mr{I})\right]$}
     \item Calculate numerically RHS of check-function $f_\mr{C}$ with current
-      filter $J_{ij}$:\newline
-      $d_\mr{F} = f_\mr{C}.\mr{lhs}(b/r)\cdot J_{ij}\ /\ r$
+      filter \old{$J_{ij}$}\new{$J$}:\newline
+      \old{$d_\mr{F} = f_\mr{C}.\mr{lhs}(b/r)\cdot J_{ij}\ /\ r$}\\
+      \new{$d_\mr{F} = f_\mr{C}^\mr{lhs}(b/r)\cdot J\ /\ r$}
       \item Store minimum recovered amplitude or maximum $r$ where relative
         error is less than the provided error:\newline
         $\chi_{ij} = g\left[
@@ -436,9 +447,15 @@ The basic steps are as follows:
         \mr{error}\right) -1\right]\ $, where $g$ is either $d_\mr{R}$
         or $1/r$.
     \end{enumerate}
-  \item Return filter coefficients which yield minimum amplitude or maximum $r$
-    (a local minimization can be run to polish the brute-force result):\newline
-    return $J\left[\mr{argmin}(\chi)\right] $\newline
+  \item \old{Return filter}\new{Re-calculate (Steps 2a-2c) filter base and}
+    coefficients which yield minimum amplitude or maximum $r$ (a local
+    minimization can be run to polish the brute-force result):\newline
+    \new{$i_\mr{best}$, $j_\mr{best}$ = $\mr{argmin}(\chi)$}\newline
+    \new{recalculate $b$, $J$ with $i_\mr{best}$, $j_\mr{best}$}\newline
+    \old{return $J\left[\mr{argmin}(\chi)\right] $}\newline
+  \item \new{Return filter base and coefficients and error matrix (for visual
+    QC):}\newline
+    \new{return $b$, $J$, $\chi$}\newline
 \end{enumerate}
 
 \subsection{Minimization criteria}
@@ -746,8 +763,9 @@ The presented, free and open-source code \texttt{fdesign} can be used to design
 digital linear filters for the Hankel and Fourier transforms (and more
 generally for any linear transform) using either analytical transform pairs or
 1D subsurface models together with the EM-modeler \texttt{empymod}. The code is
-available from GitHub in the add-on repository of \texttt{empymod}, called
-\texttt{empyscripts}, from version 0.2.0 onwards.
+available from GitHub \old{in the add-on repository}\new{as part} of
+\texttt{empymod}\old{, called \texttt{empyscripts},} from version
+\old{0.2.0}\new{1.7.0} onwards.
 
 The presented 201\,pt filter achieves more precise results in the three
 presented CSEM cases than other filters, and is included in \texttt{empymod}
@@ -776,9 +794,11 @@ We see \texttt{fdesign} as being useful for at least 3 scenarios:
 
 \section{Acknowledgment}
 
-D.W. would like to thank the electromagnetic research group of Aleksandr
-Mousatov at the IMP for fruitful discussions, and Jürg Hunziker for valuable
-feedback which improved this manuscript considerably.
+% D.W. would like to thank the electromagnetic research group of Aleksandr
+% Mousatov at the IMP for fruitful discussions, and Jürg Hunziker for valuable
+% feedback which improved this manuscript considerably.
+We thank the reviewers for valuable inputs not only regarding the manuscript,
+but also regarding the code and its documentation.
 
 % REFERENCES
 \begin{thebibliography}{}
