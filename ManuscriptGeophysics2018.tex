@@ -234,9 +234,9 @@ center-frequency GPR data using a 401 point filter that was designed for
 diffusive EM, and found that it was orders of magnitude faster than quadrature
 approaches. However, good quality results were only obtained for the first
 arrivals at short time-offsets and the later arrivals had poor quality. Yet,
-this promising initial test suggested it might be possible to specifically
-design a special filter for GPR frequencies where the EM fields propagate as
-waves rather than by diffusion.
+this promising initial test \old{suggested}\new{suggests} it might be possible
+to specifically design a special filter for GPR frequencies where the EM fields
+propagate as waves rather than by diffusion.
 
 While there are several versions of digital filters that are freely available,
 there are no open-source filter designing tools that readily available; they
@@ -251,8 +251,9 @@ In the following sections we give a brief overview of the methodology, the
 theory, and the code, and then show examples of its usage, as well as
 presenting new filters for both CSEM and GPR data. The current article falls
 therefore into all three mentioned categories by the new application of DLF to
-wave phenomena and by providing new filters with the accompanying code. The
-algorithm and many more examples of its usage can be found on
+wave phenomena, \new{which means that the DLF can be used to model seismic
+wavefields as well,} and by providing new filters with the accompanying code.
+The algorithm and many more examples of its usage can be found on
 \href{https://github.com/empymod/article-fdesign}{github.com/empymod/article-fdesign}.
 The examples can be used as templates to design new filters.
 
@@ -394,15 +395,16 @@ resulting linear system
   \label{eq:,linearSystem}
 \end{equation}
 %
-can be solved by direct matrix inversion to obtain the vector of filter
-coefficients $\bf{h}$. For a given filter length $N$, there are many subjective
-choices that go into the practical implementation of this method, including the
-choice of the transform pairs $F(r)$ and $f(l)$, as well as the value for $M$
-and the particular range and spacing of the values $r_m$. Once values are
-chosen for these variables, an optimal filter can be found by a grid search
-over $\Delta$ and $\delta$ for values that produce a high quality filter. The
-choice of metric for what constitutes a high quality filter is also subjective
-and is further discussed below.
+can be solved by direct matrix inversion\new{, or any other matrix inversion
+routine,} to obtain the vector of filter coefficients $\bf{h}$. For a given
+filter length $N$, there are many subjective choices that go into the practical
+implementation of this method, including the choice of the transform pairs
+$F(r)$ and $f(l)$, as well as the value for $M$ and the particular range and
+spacing of the values $r_m$. Once values are chosen for these variables, an
+optimal filter can be found by a grid search over $\Delta$ and $\delta$ for
+values that produce a high quality filter. The choice of metric for what
+constitutes a high quality filter is also subjective and is further discussed
+below.
 
 \subsection{Pseudo-code for \texttt{fdesign} }
 
