@@ -251,9 +251,9 @@ In the following sections we give a brief overview of the methodology, the
 theory, and the code, and then show examples of its usage, as well as
 presenting new filters for both CSEM and GPR data. The current article falls
 therefore into all three mentioned categories by the new application of DLF to
-wave phenomena, \new{which means that the DLF can be used to model seismic
-wavefields as well,} and by providing new filters with the accompanying code.
-The algorithm and many more examples of its usage can be found on
+wave phenomena, \new{which means that the DLF can probably be used to model
+seismic wavefields as well,} and by providing new filters with the accompanying
+code. The algorithm and many more examples of its usage can be found on
 \href{https://github.com/empymod/article-fdesign}{github.com/empymod/article-fdesign}.
 The examples can be used as templates to design new filters.
 
@@ -309,8 +309,8 @@ methods it is based upon are:
     transform pairs. However, for some complex models and specifically for very
     high frequencies, maximizing $r$ will yield much better and more consistent
     results.
-  \item The algorithm can solve under-, equal-, and over-determined linear
-    systems.
+  \item The algorithm can solve \old{under-,} equal-\old{,} and over-determined
+    linear systems.
   \item The real or the imaginary part can be used for the inversion of complex
     transform pairs.
 \end{itemize}
@@ -460,19 +460,26 @@ The basic steps are as follows:
     \new{return $b$, $J$, $\chi$}\newline
 \end{enumerate}
 
+\new{To solve step 2(c) we implemented the QR-decomposition method in
+  \texttt{fdesign}.}
+
 \subsection{Minimization criteria}
 Figure~\ref{fig:InvCrit} shows the differences between the different
 minimization approaches; in (a) for a conventional, fast decaying transform
-pair; and in (b) for a more complex, high frequency layered model. The circles
-show the minimum amplitude used in previous approaches. This criterion is not
-ideal, as it is subject to some random fluctuations and depends on the choice
-of $r$. The squares show the minimum amplitude given a certain acceptable
-error, and the diamonds show the maximum $r$ given a certain acceptable error
-(the inversion is a minimization process, it therefore minimizes $1/r$, not
-$r$). In simple cases the minimum amplitude given an acceptable error and the
-maximum $r$ given an acceptable error will yield the same result. However, in
-complex cases the maximum $r$ is more consistent and therefore a much better
-criterion.
+pair \new{(using the $J_0$ kernel of a fullspace with vertical distance between
+source and receiver of 50\,m, frequency $f=1\,$Hz, and resistivity
+$\rho=1\,\Omega\,$m)}; and in (b) for a more complex, high frequency layered
+model \new{(using the $J_0$ kernel for $f=200\,$MHz for the GPR model described
+in the section \emph{Ground-penetrating radar}, with receiver located at 1\,m
+depth)}. The circles show the minimum amplitude used in previous approaches.
+This criterion is not ideal, as it is subject to some random fluctuations and
+depends on the choice of $r$. The squares show the minimum amplitude given a
+certain acceptable error, and the diamonds show the maximum $r$ given a certain
+acceptable error (the inversion is a minimization process, it therefore
+minimizes $1/r$, not $r$). In simple cases the minimum amplitude given an
+acceptable error and the maximum $r$ given an acceptable error will yield the
+same result. However, in complex cases the maximum $r$ is more consistent and
+therefore a much better criterion.
 %
 \plot*{InvCrit}{width=.9\textwidth}{(a) A regular RHS curve of a transform pair
   with a purely decaying function. Minimum amplitude or maximum $r$ yield the
@@ -496,18 +503,11 @@ and Fourier transforms. As there is no difference in the procedure of the two,
 this should be sufficient to demonstrate the algorithm.
 
 \subsection{Design}
-Figure~\ref{fig:201} shows the solution spaces of four consecutive inversion
-runs, where each run is a focus on a subsection of the previous run, indicated
-by the red square.
-%
-\plot*{201}{width=\textwidth}{%
-  Solution spaces of four consecutive inversion runs for a 201\,pt filter. Each
-  consecutive run zooms into a portion of the previous solution space,
-  indicated by the red square. The more in detail we obtain the solution space,
-  the more random appears to be the distribution.}%
-%
-The filter length in this case is $N=201$, and the theoretical transform pairs
-are as given, e.g., in \cite{USGS.75.Anderson}:
+Figure~\ref{fig:201} shows the solution spaces of \old{four}\new{eight}
+consecutive inversion runs\old{, where each run is a focus on a subsection of
+  the previous run, indicated by the red square. The filter length in this case
+is $N=201$, and}\new{where} the theoretical transform pairs
+\old{are} as given, e.g., in \cite{USGS.75.Anderson}\old{:}\new{,}
 %
 \begin{align}
   \int^\infty_0\,l \exp\left(-al^2\right) J_0(rl)\,dl &=
@@ -517,20 +517,41 @@ are as given, e.g., in \cite{USGS.75.Anderson}:
   \label{eq:j01}
 \end{align}
 %
-where $a$ was set to 5. In the algorithm you can provide one pair for the
-inversion, and a different pair to get the minimum amplitude or the maximum
-$r$. In this case the same transform pair was used for both the inversion and
-the check of quality. The acceptable relative error was set to 1\,\%. The RHS
-evaluation parameter for the inversion was set so  that an over-determined
-system was evaluated with $M = 2N$ equations, where $r_\mr{I}$ was
-logarithmically spaced from $\log_{10}(1/\max(b)) - 1$ to $\log_{10}(1/\min(b))
-+ 1$, where $b$ are the filter abscissae as given in equation~\ref{eq:base}.
-This is accomplished in \texttt{fdesign} by setting parameter $r_\mr{def} = (1,
-1, 2)$.
+%
+\plot*{201}{width=\textwidth}{%
+  Solution spaces of four consecutive inversion runs for a 201\,pt filter. Each
+  consecutive run zooms into a portion of the previous solution space,
+  indicated by the red square. The more in detail we obtain the solution space,
+  the more random appears to be the distribution.}%
+%
+where \new{used; } $a$ was set to 5. In the algorithm you can provide one pair
+for the inversion, and a different pair to get the minimum amplitude or the
+maximum $r$. In this case the same transform pair was used for both the
+inversion and the check of quality. The acceptable relative error was set to
+1\,\%. The RHS evaluation parameter for the inversion was set so  that an
+over-determined system was evaluated with $M = 2N$ equations, where $r_\mr{I}$
+was logarithmically spaced from $\log_{10}(1/\max(b)) - 1$ to
+$\log_{10}(1/\min(b)) + 1$, where $b$ are the filter abscissae as given in
+equation~\ref{eq:base}. This is accomplished in \texttt{fdesign} by setting
+parameter $r_\mr{def} = (1, 1, 2)$.
 
-From the low resolution overview runs (a) and (b) it looks like this is a
-standard, straight-forward minimization problem. However, from the more
-detailed results in (c) and (d) it becomes obvious that it is a minimization
+\new{The top row shows in subplots (a) to (d) four different inversion runs
+for $N=51$, 101, 201, and 401 for a wide range of spacing and shift values.
+From this one has to decide for a filter length. Longer filters tend to give
+more precise results, but their transform is computationally more expensive as
+more values have to be evaluated. The length of the filter does not has to be
+an odd number, but many published filters do have an odd number of
+coefficients. The integral runs from $-\infty$ to $+\infty$ and hence an odd
+point filter comes naturally by truncating the integral to a finite sum from
+$-(N-1)/2$ to $(N-1)/2$. However, this is only true if the shift value is
+$\delta = 0$. If your shift value is not zero then there is no advantage in
+having an odd point filter.}
+
+\new{The bottom row shows four consecutive inversion runs for $N=201$, where
+each run is a focus on a subsection of the previous run, indicated by the red
+square.} From the low resolution overview runs (e) and (f) it looks like this
+is a standard, straight-forward minimization problem. However, from the more
+detailed results in (g) and (h) it becomes obvious that it is a minimization
 problem that has to be solved stochastically, as there are solutions with 2
 orders of magnitude difference apparently randomly next to each other.
 
@@ -546,18 +567,20 @@ contributions.
 %
 
 Designing filters is to a large extent trial and error. All input variables
-influence the outcome, and often  a good filter is found by sheer luck of
-choosing the right starting parameters. Each of the input parameters has an
-effect on the outcome. It also depends heavily on the transform pairs
-$f_\mr{I;C}$; functions that decay rapidly are generally better, as noted by
-earlier authors \citep[e.g.][]{USGS.75.Anderson}. It also depends on the filter
-length, and obviously heavily on the spacing and shift values. Another
-important point is how you define the right-hand evaluation points of the
-inversion ($r_\mr{def}$). Evaluating corresponding transform pairs separately
-or jointly also leads to different filter coefficients ($J_0$, $J_1$, or $J_0$
-\& $J_1$, or equally sine, cosine, or sine \& cosine); also if the real or the
-imaginary part is used when complex transform pairs or \texttt{empymod} is
-used; and if it is inverted for the minimum amplitude or for the maximum $r$.
+influence the outcome, and often a good filter is found by sheer luck of
+choosing the right starting parameters\new{, as can be seen in
+Figure~\ref{fig:201b} (h). However, once you are in this zone every filter is a
+very good filter}. Each of the input parameters has an effect on the outcome.
+It also depends heavily on the transform pairs $f_\mr{I;C}$; functions that
+decay rapidly are generally better, as noted by earlier authors
+\citep[e.g.][]{USGS.75.Anderson}. It also depends on the filter length, and
+obviously heavily on the spacing and shift values. Another important point is
+how you define the right-hand evaluation points of the inversion
+($r_\mr{def}$). Evaluating corresponding transform pairs separately or jointly
+also leads to different filter coefficients ($J_0$, $J_1$, or $J_0$ \& $J_1$,
+or equally sine, cosine, or sine \& cosine); also if the real or the imaginary
+part is used when complex transform pairs or \texttt{empymod} is used; and if
+it is inverted for the minimum amplitude or for the maximum $r$.
 
 \subsection{CSEM}
 In this section we compare the 201\,pt filter derived in the previous section
@@ -643,7 +666,8 @@ $10^{-25}\,$V/m.
   practical CSEM applications. The exception is in the shallow water case for
   $\rho = 1\,\Omega\,$m and $10\,\Omega\,$m for large offsets and high
   frequencies (yellow zones). However, the amplitudes in these regions are in
-  the order of $10^{-25}\,$V/m, and therefore far below the noise level.}
+  the order of $10^{-25}\,$V/m, and therefore \old{far}\new{several orders of
+  magnitude} below the noise level\new{s of current EM instrument systems}.}
 %
 
 Another error test is shown in Figure~\ref{fig:skindepth1}. It shows in (a) the
