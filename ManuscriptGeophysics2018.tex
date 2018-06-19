@@ -1,6 +1,6 @@
 % \documentclass[manuscript]{geophysics}
-% \documentclass[paper,twocolumn,twoside]{geophysics}
-\documentclass[paper]{geophysics}
+\documentclass[paper,twocolumn,twoside]{geophysics}
+% \documentclass[paper]{geophysics}
 % \documentclass[paper, revised]{geophysics}
 % \documentclass[manuscript,revised]{geophysics}
 
@@ -37,32 +37,32 @@ transforms in potential, diffusive, and wavefield modeling}
 \ms{GEO-2018-0069.R2}
 
 \address{
-% \footnotemark[1]TU Delft,
-% Building 23,
-% Stevinweg 1 / PO-box 5048,
-% 2628 CN Delft,
-% E-mail: \href{mailto:E.C.Slob@tudelft.nl}{E.C.Slob@tudelft.nl};
-% \footnotemark[2]Instituto Mexicano del Petróleo,
-% Eje Central Lázaro Cárdenas Norte 152,
-% Col. San Bartolo Atepehuacan C.P. 07730,
-% Ciudad de México, México,
-% E-mail: \href{mailto:dieter@werthmuller.org}{Dieter@Werthmuller.org};
-% \footnotemark[3]Lamont-Doherty Earth Observatory, Columbia University,
-% 305C Oceanography,
-% 61 Route 9W, PO Box 1000,
-% Palisades NY 10964-8000 US,
-% E-mail: \href{mailto:KKey@ldeo.columbia.edu}{KKey@ldeo.columbia.edu}.
+\footnotemark[1]TU Delft,
+Building 23,
+Stevinweg 1 / PO-box 5048,
+2628 CN Delft,
+E-mail: \href{mailto:dieter@werthmuller.org}{Dieter@Werthmuller.org};
+\href{mailto:E.C.Slob@tudelft.nl}{E.C.Slob@tudelft.nl};
+\footnotemark[2]Instituto Mexicano del Petróleo,
+Eje Central Lázaro Cárdenas Norte 152,
+Col. San Bartolo Atepehuacan C.P. 07730,
+Ciudad de México, México,
+\footnotemark[3]Lamont-Doherty Earth Observatory, Columbia University,
+305C Oceanography,
+61 Route 9W, PO Box 1000,
+Palisades NY 10964-8000 US,
+E-mail: \href{mailto:KKey@ldeo.columbia.edu}{KKey@ldeo.columbia.edu}.
 }
 
 
 \author{%
-% Dieter Werthmüller\footnotemark[1]\footnotemark[2], %
-% Kerry Key\footnotemark[3], and %
-% Evert C.\ Slob\footnotemark[1]%
+Dieter Werthmüller\footnotemark[1]\footnotemark[2], %
+Kerry Key\footnotemark[3], and %
+Evert C.\ Slob\footnotemark[1]%
 }
 
 \footer{}
-\lefthead{}%Werthmüller et al.}
+\lefthead{Werthmüller et al.}
 \righthead{Digital filter designing tool}
 
 \maketitle
@@ -370,14 +370,13 @@ abscissae is a function of the spacing $\Delta$ and the shift $\delta$,
   \label{eq:base}
 \end{equation}
 %
-\new{Note to reviewers: In equation~\ref{eq:base} $N/2$ changed to
-$\lfloor{(N+1)/2\rfloor}$.} From equation~\ref{eq:filtapprox} it can be
-seen that the filter method requires $N$ evaluations at each $r$. For example,
-to calculate the frequency domain result for 100 offsets with a 201\,pt filter
-requires 20,100 evaluations in the wavenumber domain. This is why the DLF often
-uses interpolation to minimize the required evaluations, either for $F(r)$ in
-what is referred to as \emph{lagged convolution DLF}, or for $f(l)$, which we
-here call \emph{splined DLF}.
+From equation~\ref{eq:filtapprox} it can be seen that the filter method
+requires $N$ evaluations at each $r$. For example, to calculate the frequency
+domain result for 100 offsets with a 201\,pt filter requires 20,100 evaluations
+in the wavenumber domain. This is why the DLF often uses interpolation to
+minimize the required evaluations, either for $F(r)$ in what is referred to as
+\emph{lagged convolution DLF}, or for $f(l)$, which we here call \emph{splined
+DLF}.
 
 In the direct matrix inversion method for solving for the digital filter
 coefficients, equation~\ref{eq:filtapprox} is cast as a linear system\old{ as
@@ -449,7 +448,7 @@ The basic steps are as follows:
         \mr{error}\right) -1\right]\ $, where $g$ is either $d_\mr{R}$
         or $1/r$.
     \end{enumerate}
-  \item \old{Return filter}\new{Re-calculate (Steps 2a-2c) filter base and}
+  \item \old{Return filter}\new{Re-calculate (steps 2a-2c) filter base and}
     coefficients which yield minimum amplitude or maximum $r$ (a local
     minimization can be run to polish the brute-force result):\newline
     \new{$i_\mr{best}$, $j_\mr{best}$ = $\mr{argmin}(\chi)$}\newline
@@ -507,10 +506,10 @@ this should be sufficient to demonstrate the algorithm.
 inversion runs, where each run is a focus on a subsection of the previous run,
 indicated by the red square. The filter length in this case is $N=201$, and the
 theoretical transform pairs are as given, e.g., in
-\cite{USGS.75.Anderson}:}
+}\cite{USGS.75.Anderson}\old{:}
 \new{Figures~\ref{fig:201a} and~\ref{fig:201b} show the solution spaces of
 seven consecutive inversion runs using the following theoretical transform
-pairs \citep[e.g.,][]{USGS.75.Anderson},}
+pairs} \citep[e.g.,][]{USGS.75.Anderson}\new{,}
 %
 \begin{align}
   \int^\infty_0\,l \exp\left(-al^2\right) J_0(rl)\,dl &=
@@ -578,12 +577,12 @@ contributions.
 %
 
 Designing filters is to a large extent trial and error. All input variables
-influence the outcome, and often a \old{good}\new{even better} filter is found
-by sheer luck of choosing the right starting parameters\new{, as can be seen in
-Figure~\ref{fig:201c} (h). However, once you are in this zone every filter is a
-very good filter}. Each of the input parameters has an effect on the outcome.
-It also depends heavily on the transform pairs $f_\mr{I;C}$; functions that
-decay rapidly are generally better, as noted by earlier authors
+influence the outcome, and often \old{a good}\new{an even better} filter is
+found by sheer luck of choosing the right starting parameters\new{, as can be
+seen in Figure~\ref{fig:201c} (h). However, once you are in this zone every
+filter is a very good filter}. Each of the input parameters has an effect on
+the outcome. It also depends heavily on the transform pairs $f_\mr{I;C}$;
+functions that decay rapidly are generally better, as noted by earlier authors
 \citep[e.g.][]{USGS.75.Anderson}. It also depends on the filter length, and
 obviously heavily on the spacing and shift values. Another important point is
 how you define the right-hand evaluation points of the inversion
@@ -805,8 +804,9 @@ digital linear filters for the Hankel and Fourier transforms (and more
 generally for any linear transform) using either analytical transform pairs or
 1D subsurface models together with the EM-modeler \texttt{empymod}. The code is
 available from GitHub \old{in the add-on repository}\new{as part} of
-\texttt{empymod}\old{, called \texttt{empyscripts},} from version
-\old{0.2.0}\new{1.7.0} onwards.
+\texttt{empymod}\old{, called \texttt{empyscripts},}\new{; the version
+  corresponding to this publication is \texttt{v1.7.1.}}\old{ from version
+  0.2.0 onwards}.
 
 The presented 201\,pt filter achieves more precise results in the three
 presented CSEM cases than other filters, and is included in \texttt{empymod}
@@ -835,11 +835,11 @@ We see \texttt{fdesign} as being useful for at least 3 scenarios:
 
 \section{Acknowledgment}
 
-% D.W. would like to thank the electromagnetic research group of Aleksandr
-% Mousatov at the IMP for fruitful discussions, and Jürg Hunziker for valuable
-% feedback which improved this manuscript considerably.
-We thank the reviewers for valuable inputs not only regarding the manuscript,
-but also regarding the code and its documentation.
+D.W. would like to thank the electromagnetic research group of Aleksandr
+Mousatov at the IMP for fruitful discussions, and Jürg Hunziker for valuable
+feedback which improved this manuscript considerably. We thank the reviewers
+for valuable inputs not only regarding the manuscript, but also regarding the
+code and its documentation.
 
 % REFERENCES
 \begin{thebibliography}{}
