@@ -15,8 +15,6 @@ notebooks/data/*.zip
 notebooks/data/*.npz
 notebooks/data/GPR/
 figures/Figure_*.tif
-notebooks/filters/new/
-notebooks/filters/old/
 *.dat
 *.dir
 *.bak

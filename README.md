@@ -34,28 +34,23 @@ to reproduce all the figures.
       were replaced by plain ASCII files, due to restrictions by the SEG, and a
       routine to convert the ASCII files into the binary format was added.
 
+2. Re-submitted 19/06/2018. The stable release at the time of submission of
+   `empymod` was
+   [Version 1.7.1](https://github.com/empymod/empymod/releases/tag/v1.7.1).
+
 ## Instructions to reproduce the figures with the zip-file provided by the SEG
 
 The piece of code related to the publication is `fdesign.py`, located in the
-folder `notebooks/empyscripts` in the zip-file or in the folder `empyscripts`
-on https://github.com/empymod/empyscripts.
+folder `notebooks/empymod/scripts` in the zip-file or in the folder
+`empymod/scripts` on <https://github.com/empymod/empymod>.
 
 - The zip-file provided by the SEG contains all files required to reproduce the
-  figures of the article. However, SEG does not permit the distribution of
-  binary files. Therefore, the digital linear filters and the inversion results
-  used in some of the plots are provided in plain ASCII files. The zip-file
-  contains a script to convert these ASCII files into the required binary
-  format. In order to reproduce all figures you have therefore to run first
-  the command
-  
-      python create_binaries.py
-      
-  in a terminal in the directory `fdesign/notebooks`.
-- Have a look at https://empymod.github.io for the latest version of `empymod`
-  and `empyscripts`, further instructions, the manual, and many more examples
-  and information.
+  figures of the article.
+- Have a look at <https://empymod.github.io> for the latest version of
+  `empymod`, further instructions, the manual, and many more examples and
+  information.
 - For a maintained version of the figures in the article see
-  https://github.com/empymod/article-fdesign.
+  <https://github.com/empymod/article-fdesign>.
 
 
 ## Requirements
@@ -66,11 +61,11 @@ modules `IPython`, `Jupyter`, and `matplotlib` are required additionally.
 
 If you are new to Python I recommend using a Python distribution, which will
 ensure that all dependencies are met, specifically properly compiled versions
-of `NumPy` and `SciPy`; I recommend using Anaconda, https://www.anaconda.com.
+of `NumPy` and `SciPy`; I recommend using Anaconda, <https://www.anaconda.com>.
 
-The required modules `empymod` and `empyscripts` are included in the provided
-source code (folder in which this README resides). Have a look at
-https://empymod.github.io if you want to install the latest version of them.
+The required module `empymod` is included in the provided source code (folder
+in which this README resides). Have a look at <https://empymod.github.io> if
+you want to install the latest version of them.
 
 
 ## Reproducing
@@ -78,32 +73,41 @@ https://empymod.github.io if you want to install the latest version of them.
 Start `Jupyter` and navigate to the notebooks-folder. The notebooks to
 reproduce the figures in the article are:
 
-1. **Figure-InversionCriterium**: Figure 1.
-2. **Figure-ExampleDesign.ipynb**: Figures 2 and 3.
-3. **Figure-KongKey.ipynb**: Figures 4 and 5.
-4. **Figure-Errors.ipynb**: Figures 6 and 7.
-5. **GPR-create-data.ipynb**: Creation of data for Figures 8-10 (see comments
+1. **Figure-InversionCriterium.ipynb**: Figure 1.
+2. **Figure-ExampleDesign.ipynb**: Figures 2, 3, and 4.
+3. **Figure-KongKey.ipynb**: Figures 5 and 6.
+4. **Figure-Errors.ipynb**: Figures 7 and 8.
+5. **GPR-create-data.ipynb**: Creation of data for Figures 9-11 (see comments
    below).
-6. **GPR-Figure.ipynb**: Figure 8.
-7. **GPR-f-t.ipynb**: Figures 9 and 10.
+6. **GPR-Figure.ipynb**: Figure 9.
+7. **GPR-f-t.ipynb**: Figures 10 and 11.
 
 Some comments regarding `GPR-create-data.ipynb`:
 - If you want to reproduce the data for `EMmod` too, you will have to install
-  `EMmod` as well (see http://software.seg.org/2015/0001).
+  `EMmod` as well (see <http://software.seg.org/2015/0001>).
 - If you want to run the whole file, including the cell for `EMmod`, the whole
   script will take likely a day to run.
 - The required data-zips are provided in the `notebooks/data`-directory on
-  https://github.com/empymod/article-fdesign, so you can get them there instead
-  of running `GPR-create-data.ipynb` in order to run `GPR-Figure.ipynb` and
-  `GPR-f-t.ipynb`.
+  <https://github.com/empymod/article-fdesign>, so you can get them there
+  instead of running `GPR-create-data.ipynb` in order to run `GPR-Figure.ipynb`
+  and `GPR-f-t.ipynb`.
 
-More notebooks (and maintained versions of the above ones) can be found on
-https://github.com/empymod/article-fdesign.
+Other notebooks in the notebooks-folder:
 
-**Note**: Some notebooks use LaTeX for axis labels. If you don't have LaTeX
-installed, just comment out in the first cell the following line
+8. **AnalyticalTransformPairs.ipynb**: Visual check of all theoretical
+   transform pairs included in ``fdesign``.
+9. **Example-using-empymod.ipynb**: Create a filter using `empymod` or your own
+   theoretical transform pairs.
+10. **Figure-Errors-AllFilters.ipynb**: Check the errors as in Figure 7 but for
+    all filters included in `empymod`.
+11. **Filter-wer2001.ipynb**: Creation of the 2001 pt filter.
+12. **Filter-wer201.ipynb**: Creation of the 201 pt filter.
+13. **Filter-wer201-SineCosine.ipynb**: Creation of a 201 pt Fourier filter.
+14. **GPR-Figure-RPD.ipynb**: Another error plot for the GPR result.
 
-    plt.rcParams['text.usetex'] = True
+
+Maintained versions of the notebooks can be found on
+<https://github.com/empymod/article-fdesign>.
 
 
 ## Note

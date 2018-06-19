@@ -1,8 +1,8 @@
 % \documentclass[manuscript]{geophysics}
 % \documentclass[paper,twocolumn,twoside]{geophysics}
-% \documentclass[paper]{geophysics}
+\documentclass[paper]{geophysics}
 % \documentclass[paper, revised]{geophysics}
-\documentclass[manuscript,revised]{geophysics}
+% \documentclass[manuscript,revised]{geophysics}
 
 %%fakesection ===    PACKAGES & DEFINITIONS    ===
 % \usepackage{showframe}
@@ -503,11 +503,14 @@ and Fourier transforms. As there is no difference in the procedure of the two,
 this should be sufficient to demonstrate the algorithm.
 
 \subsection{Design}
-Figure~\ref{fig:201} shows the solution spaces of \old{four}\new{eight}
-consecutive inversion runs\old{, where each run is a focus on a subsection of
-  the previous run, indicated by the red square. The filter length in this case
-is $N=201$, and}\new{where} the theoretical transform pairs
-\old{are} as given, e.g., in \cite{USGS.75.Anderson}\old{:}\new{,}
+\old{Figure~\ref{fig:201b} shows the solution spaces of four consecutive
+inversion runs, where each run is a focus on a subsection of the previous run,
+indicated by the red square. The filter length in this case is $N=201$, and the
+theoretical transform pairs are as given, e.g., in
+\cite{USGS.75.Anderson}:}
+\new{Figures~\ref{fig:201a} and~\ref{fig:201b} show the solution spaces of
+seven consecutive inversion runs using the following theoretical transform
+pairs \citep[e.g.,][]{USGS.75.Anderson},}
 %
 \begin{align}
   \int^\infty_0\,l \exp\left(-al^2\right) J_0(rl)\,dl &=
@@ -517,59 +520,67 @@ is $N=201$, and}\new{where} the theoretical transform pairs
   \label{eq:j01}
 \end{align}
 %
-%
-\plot*{201}{width=\textwidth}{%
-  Solution spaces of four consecutive inversion runs for a 201\,pt filter. Each
-  consecutive run zooms into a portion of the previous solution space,
-  indicated by the red square. The more in detail we obtain the solution space,
-  the more random appears to be the distribution.}%
-%
-where \new{used; } $a$ was set to 5. In the algorithm you can provide one pair
+where $a$ was set to 5. In the algorithm you can provide one pair
 for the inversion, and a different pair to get the minimum amplitude or the
 maximum $r$. In this case the same transform pair was used for both the
 inversion and the check of quality. The acceptable relative error was set to
 1\,\%. The RHS evaluation parameter for the inversion was set so  that an
 over-determined system was evaluated with $M = 2N$ equations, where $r_\mr{I}$
-was logarithmically spaced from $\log_{10}(1/\max(b)) - 1$ to
-$\log_{10}(1/\min(b)) + 1$, where $b$ are the filter abscissae as given in
+was logarithmically spaced from $\log_{10}[1/\max(b)] - 1$ to
+$\log_{10}[1/\min(b)] + 1$, where $b$ are the filter abscissae as given in
 equation~\ref{eq:base}. This is accomplished in \texttt{fdesign} by setting
 parameter $r_\mr{def} = (1, 1, 2)$.
 
-\new{The top row shows in subplots (a) to (d) four different inversion runs
-for $N=51$, 101, 201, and 401 for a wide range of spacing and shift values.
+\new{Figure~\ref{fig:201a} shows three different inversion runs for $N=101$,
+201, and 401 for a wide range of spacing and shift values.
 From this one has to decide for a filter length. Longer filters tend to give
 more precise results, but their transform is computationally more expensive as
 more values have to be evaluated. The length of the filter does not has to be
 an odd number, but many published filters do have an odd number of
 coefficients. The integral runs from $-\infty$ to $+\infty$ and hence an odd
 point filter comes naturally by truncating the integral to a finite sum from
-$-(N-1)/2$ to $(N-1)/2$. However, this is only true if the shift value is
-$\delta = 0$. If your shift value is not zero then there is no advantage in
-having an odd point filter.}
+$-(N-1)/2$ to $(N-1)/2$. However, this is only true if the shift value
+$\delta = 0$. If it differs from zero then there is no advantage in having an
+odd point filter.}
+%
+\plot*{201a}{width=\textwidth}{%
+  \new{Test of different filter lengths. Filter length is a trade-off between
+    precision and speed, as shorter filters are faster but less precise, and
+  longer filters are more precise but computationally more expensive. The red
+  square in subplot (b) is the starting point of Figure~\ref{fig:201b}.} }%
+%
 
-\new{The bottom row shows four consecutive inversion runs for $N=201$, where
-each run is a focus on a subsection of the previous run, indicated by the red
-square.} From the low resolution overview runs (e) and (f) it looks like this
-is a standard, straight-forward minimization problem. However, from the more
-detailed results in (g) and (h) it becomes obvious that it is a minimization
-problem that has to be solved stochastically, as there are solutions with 2
-orders of magnitude difference apparently randomly next to each other.
+\new{Figure~\ref{fig:201b} shows four consecutive inversion runs for $N=201$,
+where each run is a focus on a subsection of the previous run, indicated by the
+red square.} From the low resolution overview runs (a) and (b) it looks like
+this is a standard, straight-forward minimization problem. However, from the
+more detailed results in (c) and (d) it becomes obvious that it is a
+minimization problem that has to be solved stochastically, as there are
+solutions with 2 orders of magnitude difference apparently randomly next to
+each other.
+%
+\plot*{201b}{width=\textwidth}{%
+  Solution spaces of four consecutive inversion runs for a 201\,pt filter. Each
+  consecutive run zooms into a portion of the previous solution space,
+  indicated by the red square. The more in detail we obtain the solution space,
+  the more random appears to be the distribution.}%
+%
 
-Figure~\ref{fig:201b} shows in (a) the filter values for $J_0$ and $J_1$ of the
+Figure~\ref{fig:201c} shows in (a) the filter values for $J_0$ and $J_1$ of the
 best 201 point filter obtained this way, and in (b) its right-hand-side
 solution. The black dots indicate negative values, from which it can seen that
 adjacent values are often alternating between positive and negative
 contributions.
 %
-\plot*{201b}{width=.9\textwidth}{(a) Filter values of the best obtained 201\,pt
+\plot*{201c}{width=.9\textwidth}{(a) Filter values of the best obtained 201\,pt
   filter with the corresponding check of quality in (b). Black points indicate
   negative values, which shows that adjacent values have often opposite signs.}
 %
 
 Designing filters is to a large extent trial and error. All input variables
-influence the outcome, and often a good filter is found by sheer luck of
-choosing the right starting parameters\new{, as can be seen in
-Figure~\ref{fig:201b} (h). However, once you are in this zone every filter is a
+influence the outcome, and often a \old{good}\new{even better} filter is found
+by sheer luck of choosing the right starting parameters\new{, as can be seen in
+Figure~\ref{fig:201c} (h). However, once you are in this zone every filter is a
 very good filter}. Each of the input parameters has an effect on the outcome.
 It also depends heavily on the transform pairs $f_\mr{I;C}$; functions that
 decay rapidly are generally better, as noted by earlier authors
@@ -594,7 +605,7 @@ $1\,\Omega\,$m half-space. The signal of a $1\,$Hz frequency $x$-directed
 electric source 50\,m above the interface is measured at an $x$-directed
 electric receiver at the interface.
 %
-\plot*{kongf5}{width=.9\textwidth}{(a) Results of different filters and QWE for
+\plot*{kongf5}{width=\textwidth}{(a) Results of different filters and QWE for
   the model of Figure~5 from \cite{GP.07.Kong} with the relative errors shown
   in (b), using the QWE result. The relative error is meaningless from about
   15.5\,km onwards, as QWE failed as well for these very low amplitudes.}
@@ -616,7 +627,7 @@ Figure~\ref{fig:keyf5}(a) considers the canonical CSEM model as used in
 target layer of 100\,m thickness is embedded at 1000\,m below the seafloor.
 The source is located at 1990\,m and receivers are positioned on the seafloor.
 %
-\plot*{keyf5}{width=.9\textwidth}{(a) The canonical marine CSEM model of
+\plot*{keyf5}{width=\textwidth}{(a) The canonical marine CSEM model of
   \cite{GEO.12.Key} and (b) a land model with source and receiver at the
   surface. The new filter has generally relative errors which are several
   orders of magnitude lower than the other filters.}
@@ -650,12 +661,15 @@ subsurface halfspace resistivity varies from 1 to 10, 100, and
 offsets from 50\,m to 20\,km on the x-axis, and 0.01\,Hz to 10\,Hz on the
 y-axis. It can be seen in the result that the filter is sufficiently precise
 for all practical CSEM cases, hence has generally an error far below 1\,\%
-($10^{-2}$) in all cases. The exception are large offsets with relatively high
-frequencies, e.g., 10\,km offset with 8\,Hz. In the shallow water case this
-zone has a very high error for subsurface resistivities of 1\,$\Omega\,$m and
+($10^{-2}$) in all cases. \new{A relative noise of less than 1\,\% is generally
+considered really good for real data.} The exception\new{s} are \new{in the
+shallow water case at} large offsets with relatively high frequencies, e.g.,
+10\,km offset with 8\,Hz\old{. In the shallow water case}\new{;} this zone has
+a very high error for subsurface resistivities of 1\,$\Omega\,$m and
 10\,$\Omega\,$m (yellow zones). However, this is due to the fact that the
 amplitudes of the signal for these offsets and frequencies are in the order of
-$10^{-25}\,$V/m.
+$10^{-25}\,$V/m. \new{The grey contour lines in the plot indicate the power of
+  the amplitude of the signal.}
 %
 \plot*{error}{width=\textwidth}{Relative error plots comparing the DLF
   (\emph{Wer201}) with QWE for the three cases deep water (top row), shallow
@@ -667,7 +681,8 @@ $10^{-25}\,$V/m.
   $\rho = 1\,\Omega\,$m and $10\,\Omega\,$m for large offsets and high
   frequencies (yellow zones). However, the amplitudes in these regions are in
   the order of $10^{-25}\,$V/m, and therefore \old{far}\new{several orders of
-  magnitude} below the noise level\new{s of current EM instrument systems}.}
+  magnitude} below the noise level\new{s of current EM instrument systems}.
+  \new{Contour lines show the power of the amplitude of the signal.}}
 %
 
 Another error test is shown in Figure~\ref{fig:skindepth1}. It shows in (a) the
