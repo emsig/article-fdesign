@@ -419,14 +419,14 @@ specified.
 The basic steps are as follows:
 \begin{enumerate}
   \item Evaluate RHS of check-function $f_\mr{C}$:\newline
-    \old{$d_\mr{R} = f_\mr{C}.\mr{rhs}(r)$}\\
+    \old{$d_\mr{R} = f_\mr{C}.\mr{rhs}(r)$\\}
     \new{$d_\mr{R} = f_\mr{C}^\mr{rhs}(r)$}
   \item Loop over each value $\Delta_i$, $\delta_j$ (brute force\new{;
       parameters on the left-hand side are overwritten where $i$, $j$
       are not mentioned}):
     \begin{enumerate}
       \item Calculate filter base:\newline
-        \old{$b_n = \exp\left\{\Delta_i(-N/2+n) + \delta_j\right\}$}\\
+        \old{$b_n = \exp\left\{\Delta_i(-N/2+n) + \delta_j\right\}$\\}
         \new{$b_n = \exp\left\{\Delta_i(-\lfloor{(N+1)/2\rfloor}+n) +
       \delta_j\right\}$}
       \item Get required RHS and LHS evaluation points:\newline
@@ -434,12 +434,12 @@ The basic steps are as follows:
         $l_\mr{I} = b/r_\mr{I}$
       \item Invert for filter coefficients:\newline
         \old{$J_{ij} = \mr{solve}(f_\mr{I}.\mr{lhs}(l_\mr{I}),
-        f_\mr{I}.\mr{rhs}(r_\mr{I}))$}\\
+        f_\mr{I}.\mr{rhs}(r_\mr{I}))$\\}
         \new{$J = \mr{solve}\left[f_\mr{I}^\mr{lhs}(l_\mr{I}),
         f_\mr{I}^\mr{rhs}(r_\mr{I})\right]$}
     \item Calculate numerically RHS of check-function $f_\mr{C}$ with current
       filter \old{$J_{ij}$}\new{$J$}:\newline
-      \old{$d_\mr{F} = f_\mr{C}.\mr{lhs}(b/r)\cdot J_{ij}\ /\ r$}\\
+      \old{$d_\mr{F} = f_\mr{C}.\mr{lhs}(b/r)\cdot J_{ij}\ /\ r$\\}
       \new{$d_\mr{F} = f_\mr{C}^\mr{lhs}(b/r)\cdot J\ /\ r$}
       \item Store minimum recovered amplitude or maximum $r$ where relative
         error is less than the provided error:\newline
