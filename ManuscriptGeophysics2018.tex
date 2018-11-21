@@ -4,10 +4,7 @@
 % \documentclass[paper, revised]{geophysics}
 % \documentclass[manuscript,revised]{geophysics}
 
-%%fakesection ===    PACKAGES & DEFINITIONS    ===
-% \usepackage{showframe}
-
-%% ~ ADDITIONAL PACKAGES TO GEOPHYSICS.CLS
+% Additional packages to geophysics.cls
 \usepackage[USenglish]{babel}
 \usepackage[utf8]{inputenc}
 \usepackage{lmodern}
@@ -15,16 +12,15 @@
 \usepackage{amssymb, amsmath, amsfonts}
 \usepackage{upquote}
 \usepackage[strings]{underscore}
-\usepackage[pdftex, final]{hyperref}
-\hypersetup{allcolors=blue, allbordercolors={0 0 .5}, colorlinks=true}
+% \usepackage[pdftex, final]{hyperref}
+% \hypersetup{allcolors=blue, allbordercolors={0 0 .5}, colorlinks=true}
+\usepackage[pdftex, hidelinks]{hyperref}
 
 % Figures
 \DeclareGraphicsExtensions{.pdf,.png,.jpg}
 \renewcommand{\figdir}{./figures}
 
 % Own commands
-\usepackage{xspace}
-\newcommand{\empymod}{\texttt{empymod}\xspace}
 \newcommand{\mr}[1]{\mathrm{#1}}
 
 \begin{document}
@@ -41,7 +37,7 @@ transforms in potential, diffusive, and wavefield modeling}
 Building 23,
 Stevinweg 1 / PO-box 5048,
 2628 CN Delft,
-E-mail: \href{mailto:dieter@werthmuller.org}{Dieter@Werthmuller.org};
+E-mail: \href{mailto:D.Werthmuller@tudelft.nl}{D.Werthmuller@tudelft.nl};
 \href{mailto:E.C.Slob@tudelft.nl}{E.C.Slob@tudelft.nl};
 \footnotemark[2]Instituto Mexicano del Petróleo,
 Eje Central Lázaro Cárdenas Norte 152,
@@ -194,7 +190,7 @@ used by \cite{GEO.09.Key, GEO.12.Key} to create a suite of filters accurate for
 marine EM data. Most works have published filters for the Hankel transform with
 $J_0$ and $J_1$ Bessel functions (or $J_{-1/2}$, $J_{1/2}$ if applied to the
 Fourier sine/cosine transform), as all higher Bessel functions can be
-rewritten, via recurrence relations, using only use these two.
+rewritten, via recurrence relations, using only\old{use} these two.
 \cite{GP.94.Mohsen} is one of the rare cases which provides $J_2$ filter
 weights.
 
@@ -230,12 +226,12 @@ frequency methods such as ground-pe\-ne\-tra\-ting radar (GPR). Generally it
 was even thought that the filter method works only in the diffusive limit where
 the quasistatic approximation is valid \citep[e.g.,][]{GEO.15.Hunziker}.
 Nevertheless, \cite{GEO.17.Werthmuller} tested DLF for modeling 250 MHz
-center-frequency GPR data using a 401 point filter that was designed for
-diffusive EM, and found that it was orders of magnitude faster than quadrature
-approaches. However, good quality results were only obtained for the first
-arrivals at short time-offsets and the later arrivals had poor quality. Yet,
-this promising initial test \old{suggested}\new{suggests} it might be possible
-to specifically design a special filter for GPR frequencies where the EM fields
+center-frequency GPR data using a 401 \old{point}\new{pt} filter that was
+designed for diffusive EM, and found that it was orders of magnitude faster
+than quadrature approaches. However, good quality results were only obtained
+for the first arrivals at short time-offsets and the later arrivals had poor
+quality. Yet, this promising initial test suggests it might be possible to
+specifically design a special filter for GPR frequencies where the EM fields
 propagate as waves rather than by diffusion.
 
 While there are several versions of digital filters that are freely available,
@@ -251,8 +247,8 @@ In the following sections we give a brief overview of the methodology, the
 theory, and the code, and then show examples of its usage, as well as
 presenting new filters for both CSEM and GPR data. The current article falls
 therefore into all three mentioned categories by the new application of DLF to
-wave phenomena, \new{which means that the DLF can probably be used to model
-seismic wavefields as well,} and by providing new filters with the accompanying
+wave phenomena, which means that the DLF can probably be used to model
+seismic wavefields as well, and by providing new filters with the accompanying
 code. The algorithm and many more examples of its usage can be found on
 \href{https://github.com/empymod/article-fdesign}{github.com/empymod/article-fdesign}.
 The examples can be used as templates to design new filters.
@@ -309,7 +305,7 @@ methods it is based upon are:
     transform pairs. However, for some complex models and specifically for very
     high frequencies, maximizing $r$ will yield much better and more consistent
     results.
-  \item The algorithm can solve \old{under-,} equal-\old{,} and over-determined
+  \item The algorithm can solve equal- and over-determined
     linear systems.
   \item The real or the imaginary part can be used for the inversion of complex
     transform pairs.
@@ -379,14 +375,14 @@ minimize the required evaluations, either for $F(r)$ in what is referred to as
 DLF}.
 
 In the direct matrix inversion method for solving for the digital filter
-coefficients, equation~\ref{eq:filtapprox} is cast as a linear system\old{ as
-follows.}\new{, where} $\Delta$ and $\delta$ are preassigned scalar values and
+coefficients, equation~\ref{eq:filtapprox} is cast as a linear system,
+where $\Delta$ and $\delta$ are preassigned scalar values and
 $r$ is a range of $M$ preassigned values $r_m$. The filter base coefficients
 $b_n$ are computed using equation~\ref{eq:base} and an array of values for $l$
 are computed using $l_{mn} = b_n/r_m$. The linear system's left hand side (LHS)
-matrix $\bf{A}$ has dimensions $M \times N$ with coefficients \old{$A_{mn} =
-f(l_{mn})/r_n$}\new{$A_{mn} = f(l_{mn})/r_m$} and the right hand side (RHS)
-vector $\bf{v}$ has elements \old{$v_n = F(r_n)$}\new{$v_m = F(r_m)$}. The
+matrix $\bf{A}$ has dimensions $M \times N$ with coefficients
+$A_{mn} = f(l_{mn})/r_m$ and the right hand side (RHS)
+vector $\bf{v}$ has elements $v_m = F(r_m)$. The
 resulting linear system
 %
 \begin{equation}
@@ -394,8 +390,8 @@ resulting linear system
   \label{eq:,linearSystem}
 \end{equation}
 %
-can be solved by direct matrix inversion\new{, or any other matrix inversion
-routine,} to obtain the vector of filter coefficients $\bf{h}$. For a given
+can be solved by direct matrix inversion, or any other matrix inversion
+routine, to obtain the vector of filter coefficients $\bf{h}$. For a given
 filter length $N$, there are many subjective choices that go into the practical
 implementation of this method, including the choice of the transform pairs
 $F(r)$ and $f(l)$, as well as the value for $M$ and the particular range and
@@ -419,28 +415,23 @@ specified.
 The basic steps are as follows:
 \begin{enumerate}
   \item Evaluate RHS of check-function $f_\mr{C}$:\newline
-    \old{$d_\mr{R} = f_\mr{C}.\mr{rhs}(r)$\\}
-    \new{$d_\mr{R} = f_\mr{C}^\mr{rhs}(r)$}
-  \item Loop over each value $\Delta_i$, $\delta_j$ (brute force\new{;
+    $d_\mr{R} = f_\mr{C}^\mr{rhs}(r)$
+  \item Loop over each value $\Delta_i$, $\delta_j$ (brute force;
       parameters on the left-hand side are overwritten where $i$, $j$
-      are not mentioned}):
+      are not mentioned):
     \begin{enumerate}
       \item Calculate filter base:\newline
-        \old{$b_n = \exp\left\{\Delta_i(-N/2+n) + \delta_j\right\}$\\}
-        \new{$b_n = \exp\left\{\Delta_i(-\lfloor{(N+1)/2\rfloor}+n) +
-      \delta_j\right\}$}
+        $b_n = \exp\left\{\Delta_i(-\lfloor{(N+1)/2\rfloor}+n) +
+      \delta_j\right\}$
       \item Get required RHS and LHS evaluation points:\newline
         $r_\mr{I} = p(b, N)$\newline
         $l_\mr{I} = b/r_\mr{I}$
       \item Invert for filter coefficients:\newline
-        \old{$J_{ij} = \mr{solve}(f_\mr{I}.\mr{lhs}(l_\mr{I}),
-        f_\mr{I}.\mr{rhs}(r_\mr{I}))$\\}
-        \new{$J = \mr{solve}\left[f_\mr{I}^\mr{lhs}(l_\mr{I}),
-        f_\mr{I}^\mr{rhs}(r_\mr{I})\right]$}
+        $J = \mr{solve}\left[f_\mr{I}^\mr{lhs}(l_\mr{I}),
+        f_\mr{I}^\mr{rhs}(r_\mr{I})\right]$
     \item Calculate numerically RHS of check-function $f_\mr{C}$ with current
-      filter \old{$J_{ij}$}\new{$J$}:\newline
-      \old{$d_\mr{F} = f_\mr{C}.\mr{lhs}(b/r)\cdot J_{ij}\ /\ r$\\}
-      \new{$d_\mr{F} = f_\mr{C}^\mr{lhs}(b/r)\cdot J\ /\ r$}
+      filter $J$:\newline
+      $d_\mr{F} = f_\mr{C}^\mr{lhs}(b/r)\cdot J\ /\ r$
       \item Store minimum recovered amplitude or maximum $r$ where relative
         error is less than the provided error:\newline
         $\chi_{ij} = g\left[
@@ -448,29 +439,29 @@ The basic steps are as follows:
         \mr{error}\right) -1\right]\ $, where $g$ is either $d_\mr{R}$
         or $1/r$.
     \end{enumerate}
-  \item \old{Return filter}\new{Re-calculate (steps 2a-2c) filter base and}
+  \item Re-calculate (steps 2a-2c) filter base and
     coefficients which yield minimum amplitude or maximum $r$ (a local
     minimization can be run to polish the brute-force result):\newline
-    \new{$i_\mr{best}$, $j_\mr{best}$ = $\mr{argmin}(\chi)$}\newline
-    \new{recalculate $b$, $J$ with $i_\mr{best}$, $j_\mr{best}$}\newline
-    \old{return $J\left[\mr{argmin}(\chi)\right] $}\newline
-  \item \new{Return filter base and coefficients and error matrix (for visual
-    QC):}\newline
-    \new{return $b$, $J$, $\chi$}\newline
+    $i_\mr{best}$, $j_\mr{best}$ = $\mr{argmin}(\chi)$\newline
+    recalculate $b$, $J$ with $i_\mr{best}$, $j_\mr{best}$\newline
+    \newline
+  \item Return filter base and coefficients and error matrix (for visual
+    QC):\newline
+    return $b$, $J$, $\chi$\newline
 \end{enumerate}
 
-\new{To solve step 2(c) we implemented the QR-decomposition method in
-  \texttt{fdesign}.}
+To solve step 2(c) we implemented the QR-decomposition method in
+  \texttt{fdesign}.
 
 \subsection{Minimization criteria}
-Figure~\ref{fig:InvCrit} shows the differences between the different
+Figure~\ref{fig:Figure-1-bw} shows the differences between the different
 minimization approaches; in (a) for a conventional, fast decaying transform
-pair \new{(using the $J_0$ kernel of a fullspace with vertical distance between
+pair (using the $J_0$ kernel of a fullspace with vertical distance between
 source and receiver of 50\,m, frequency $f=1\,$Hz, and resistivity
-$\rho=1\,\Omega\,$m)}; and in (b) for a more complex, high frequency layered
-model \new{(using the $J_0$ kernel for $f=200\,$MHz for the GPR model described
+$\rho=1\,\Omega\,$m); and in (b) for a more complex, high frequency layered
+model (using the $J_0$ kernel for $f=200\,$MHz for the GPR model described
 in the section \emph{Ground-penetrating radar}, with receiver located at 1\,m
-depth)}. The circles show the minimum amplitude used in previous approaches.
+depth). The circles show the minimum amplitude used in previous approaches.
 This criterion is not ideal, as it is subject to some random fluctuations and
 depends on the choice of $r$. The squares show the minimum amplitude given a
 certain acceptable error, and the diamonds show the maximum $r$ given a certain
@@ -480,11 +471,12 @@ acceptable error and the maximum $r$ given an acceptable error will yield the
 same result. However, in complex cases the maximum $r$ is more consistent and
 therefore a much better criterion.
 %
-\plot*{InvCrit}{width=.9\textwidth}{(a) A regular RHS curve of a transform pair
-  with a purely decaying function. Minimum amplitude or maximum $r$ yield the
-  same result in this scenario. Using a relative error criteria is more stable
-  than just the absolute minimum amplitude. (b) A 1D model for $f=200\,$MHz.
-  Here, the maximum $r$ provides a better criteria for the inversion.}
+\plot*{Figure-1-bw}{width=.9\textwidth}{(a) A regular \new{right-hand-side
+  (}RHS\new{)} curve of a transform pair with a purely decaying function.
+  Minimum amplitude or maximum $r$ yield the same result in this scenario.
+  Using a relative error criteria is more stable than just the absolute minimum
+  amplitude. (b) A 1D model for $f=200\,$MHz. Here, the maximum $r$ provides a
+  better criteria for the inversion.}
 %
 
 While the $\chi$ array is used to identify the optimal values of $\Delta$ and
@@ -502,18 +494,13 @@ and Fourier transforms. As there is no difference in the procedure of the two,
 this should be sufficient to demonstrate the algorithm.
 
 \subsection{Design}
-\old{Figure~\ref{fig:201b} shows the solution spaces of four consecutive
-inversion runs, where each run is a focus on a subsection of the previous run,
-indicated by the red square. The filter length in this case is $N=201$, and the
-theoretical transform pairs are as given, e.g., in
-}\cite{USGS.75.Anderson}\old{:}
-\new{Figures~\ref{fig:201a} and~\ref{fig:201b} show the solution spaces of
+Figures~\ref{fig:Figure-2} and~\ref{fig:Figure-3} show the solution spaces of
 seven consecutive inversion runs using the following theoretical transform
-pairs} \citep[e.g.,][]{USGS.75.Anderson}\new{,}
+pairs \citep[e.g.,][]{USGS.75.Anderson},
 %
 \begin{align}
   \int^\infty_0\,l \exp\left(-al^2\right) J_0(rl)\,dl &=
-  \frac{\exp\left(\frac{-r^2}{4a}\right)}{2a}\ , \\
+  \frac{1}{2a} \exp\left(\frac{-r^2}{4a}\right)\ , \\
   \int^\infty_0\,l^2 \exp\left(-al^2\right) J_1(rl)\,dl &=
   \frac{r}{4a^2} \exp\left(-\frac{r^2}{4a}\right)\ ,
   \label{eq:j01}
@@ -530,7 +517,7 @@ $\log_{10}[1/\min(b)] + 1$, where $b$ are the filter abscissae as given in
 equation~\ref{eq:base}. This is accomplished in \texttt{fdesign} by setting
 parameter $r_\mr{def} = (1, 1, 2)$.
 
-\new{Figure~\ref{fig:201a} shows three different inversion runs for $N=101$,
+Figure~\ref{fig:Figure-2} shows three different inversion runs for $N=101$,
 201, and 401 for a wide range of spacing and shift values.
 From this one has to decide for a filter length. Longer filters tend to give
 more precise results, but their transform is computationally more expensive as
@@ -540,49 +527,50 @@ coefficients. The integral runs from $-\infty$ to $+\infty$ and hence an odd
 point filter comes naturally by truncating the integral to a finite sum from
 $-(N-1)/2$ to $(N-1)/2$. However, this is only true if the shift value
 $\delta = 0$. If it differs from zero then there is no advantage in having an
-odd point filter.}
+odd point filter.
 %
-\plot*{201a}{width=\textwidth}{%
-  \new{Test of different filter lengths. Filter length is a trade-off between
+\plot*{Figure-2}{width=\textwidth}{%
+  Test of different filter lengths. Filter length is a trade-off between
     precision and speed, as shorter filters are faster but less precise, and
   longer filters are more precise but computationally more expensive. The red
-  square in subplot (b) is the starting point of Figure~\ref{fig:201b}.} }%
+  square in subplot (b) is the starting point of Figure~\ref{fig:Figure-3}.}%
 %
 
-\new{Figure~\ref{fig:201b} shows four consecutive inversion runs for $N=201$,
+Figure~\ref{fig:Figure-3} shows four consecutive inversion runs for $N=201$,
 where each run is a focus on a subsection of the previous run, indicated by the
-red square.} From the low resolution overview runs (a) and (b) it looks like
+red square. From the low resolution overview runs (a) and (b) it looks like
 this is a standard, straight-forward minimization problem. However, from the
 more detailed results in (c) and (d) it becomes obvious that it is a
 minimization problem that has to be solved stochastically, as there are
 solutions with 2 orders of magnitude difference apparently randomly next to
 each other.
 %
-\plot*{201b}{width=\textwidth}{%
+\plot*{Figure-3}{width=\textwidth}{%
   Solution spaces of four consecutive inversion runs for a 201\,pt filter. Each
   consecutive run zooms into a portion of the previous solution space,
   indicated by the red square. The more in detail we obtain the solution space,
   the more random appears to be the distribution.}%
 %
 
-Figure~\ref{fig:201c} shows in (a) the filter values for $J_0$ and $J_1$ of the
-best 201 point filter obtained this way, and in (b) its right-hand-side
-solution. The black dots indicate negative values, from which it can seen that
-adjacent values are often alternating between positive and negative
-contributions.
+Figure~\ref{fig:Figure-4} shows in (a) the filter values for $J_0$ and $J_1$ of
+the best 201 \old{point}\new{pt} filter obtained this way, and in (b) its
+right-hand-side solution. The black dots indicate negative values, from which
+it can \new{be} seen that adjacent values are often alternating between
+positive and negative contributions.
 %
-\plot*{201c}{width=.9\textwidth}{(a) Filter values of the best obtained 201\,pt
-  filter with the corresponding check of quality in (b). Black points indicate
-  negative values, which shows that adjacent values have often opposite signs.}
+\plot*{Figure-4}{width=.9\textwidth}{(a) Filter values of the best obtained
+  201\,pt filter with the corresponding check of quality in (b). Black points
+  indicate negative values, which shows that adjacent values have often
+  opposite signs.}
 %
 
 Designing filters is to a large extent trial and error. All input variables
-influence the outcome, and often \old{a good}\new{an even better} filter is
-found by sheer luck of choosing the right starting parameters\new{, as can be
-seen in Figure~\ref{fig:201c} (h). However, once you are in this zone every
-filter is a very good filter}. Each of the input parameters has an effect on
-the outcome. It also depends heavily on the transform pairs $f_\mr{I;C}$;
-functions that decay rapidly are generally better, as noted by earlier authors
+influence the outcome, and often an even better filter is found by sheer luck
+of choosing the right starting parameters, as can be seen in
+Figure~\ref{fig:Figure-4} (h). However, once you are in this zone every filter
+is a very good filter. Each of the input parameters has an effect on the
+outcome. It also depends heavily on the transform pairs $f_\mr{I;C}$; functions
+that decay rapidly are generally better, as noted by earlier authors
 \citep[e.g.][]{USGS.75.Anderson}. It also depends on the filter length, and
 obviously heavily on the spacing and shift values. Another important point is
 how you define the right-hand evaluation points of the inversion
@@ -594,20 +582,20 @@ it is inverted for the minimum amplitude or for the maximum $r$.
 
 \subsection{CSEM}
 In this section we compare the 201\,pt filter derived in the previous section
-to marine CSEM models used in \cite{GP.07.Kong}, \cite{GEO.12.Key}, as well as
-for a land EM case.
+to marine CSEM models \new{as} used in \cite{GP.07.Kong}, \new{in}
+\cite{GEO.12.Key}, \old{as well as}\new{and} for a land EM case.
 
-Figure~\ref{fig:kongf5} compares the derived 201\,pt filter with the two
+Figure~\ref{fig:Figure-5-bw} compares the derived 201\,pt filter with the two
 half-spaces case used by \cite{GP.07.Kong} in his Figure~5. The model consists
 of a $0.3125\,\Omega\,$m sea layer of infinite thickness above a subsurface
 $1\,\Omega\,$m half-space. The signal of a $1\,$Hz frequency $x$-directed
 electric source 50\,m above the interface is measured at an $x$-directed
 electric receiver at the interface.
 %
-\plot*{kongf5}{width=\textwidth}{(a) Results of different filters and QWE for
-  the model of Figure~5 from \cite{GP.07.Kong} with the relative errors shown
-  in (b), using the QWE result. The relative error is meaningless from about
-  15.5\,km onwards, as QWE failed as well for these very low amplitudes.}
+\plot*{Figure-5-bw}{width=\textwidth}{(a) Results of different filters and QWE
+  for the model of Figure~5 from \cite{GP.07.Kong} with the relative errors
+  shown in (b), using the QWE result. The relative error is meaningless from
+  about 15.5\,km onwards, as QWE failed as well for these very low amplitudes.}
 %
 In (a) it can be seen that the new 201\,pt filter is able to recover smaller
 amplitudes than the 241\,pt filter from \cite{GP.07.Kong}, the 201\,pt filter
@@ -620,20 +608,23 @@ taken as \emph{truth}. For offsets greater than roughly 15.5\,km the relative
 error becomes meaningless, as the QWE fails itself; this part is greyed out in
 the figure.
 
-Figure~\ref{fig:keyf5}(a) considers the canonical CSEM model as used in
+Figure~\ref{fig:Figure-6-bw}(a) considers the canonical CSEM model as used in
 \cite{GEO.12.Key} in his Figure~5: a $0.303\,\Omega\,$m sea with depth of
 2\,km, a background resistivity of $1\,\Omega\,$m, in which a $100\,\Omega\,$m
 target layer of 100\,m thickness is embedded at 1000\,m below the seafloor.
 The source is located at 1990\,m and receivers are positioned on the seafloor.
 %
-\plot*{keyf5}{width=\textwidth}{(a) The canonical marine CSEM model of
+\plot*{Figure-6-bw}{width=\textwidth}{(a) The canonical marine CSEM model of
   \cite{GEO.12.Key} and (b) a land model with source and receiver at the
-  surface. The new filter has generally relative errors which are several
-  orders of magnitude lower than the other filters.}
+  surface. \old{The new filter has generally relative errors which are several
+  orders of magnitude lower than the other filters.} \new{The new filter shows
+  relative errors that are generally several orders of magnitude lower than
+  for the other filters.}
+}
 %
 
-Figure~\ref{fig:keyf5}(b) is a land case, with a background resistivity of
-$10\,\Omega\,$m, in which a $500\,\Omega\,$m target of 100\,m thickness is
+Figure~\ref{fig:Figure-6-bw}(b) is a land case, with a background resistivity
+of $10\,\Omega\,$m, in which a $500\,\Omega\,$m target of 100\,m thickness is
 embedded at 1000\,m below the surface. The source depth is 0.5\,m and the
 receiver depth is 0.8\,m. In both cases the new filter \emph{Wer201} has
 generally a relative error which is orders of magnitude lower than the other
@@ -651,24 +642,23 @@ accurate for these three models, it might not be the best filter in other
 cases. To verify the applicability of the filter we run two different tests
 over a wide range of scenarios. Figure~\ref{fig:error} shows the relative
 errors of DLF using the filter \emph{Wer201} compared to QWE for a deep water
-model, a shallow water model, and a land model. The models consist of air
-(upper halfspace), a water layer in the first two examples, and a subsurface
-halfspace. Source depth is 1990\,m, 10\,m, and 0.5\,m in the deep, shallow, and
-land case, respectively. Receiver depth is 2000\,m, 100\,m, and 0.8\,m. The
-subsurface halfspace resistivity varies from 1 to 10, 100, and
-1000\,$\Omega\,$m from the left to the right column. The error plots cover
-offsets from 50\,m to 20\,km on the x-axis, and 0.01\,Hz to 10\,Hz on the
-y-axis. It can be seen in the result that the filter is sufficiently precise
-for all practical CSEM cases, hence has generally an error far below 1\,\%
-($10^{-2}$) in all cases. \new{A relative noise of less than 1\,\% is generally
-considered really good for real data.} The exception\new{s} are \new{in the
-shallow water case at} large offsets with relatively high frequencies, e.g.,
-10\,km offset with 8\,Hz\old{. In the shallow water case}\new{;} this zone has
-a very high error for subsurface resistivities of 1\,$\Omega\,$m and
-10\,$\Omega\,$m (yellow zones). However, this is due to the fact that the
-amplitudes of the signal for these offsets and frequencies are in the order of
-$10^{-25}\,$V/m. \new{The grey contour lines in the plot indicate the power of
-  the amplitude of the signal.}
+model \new{(2\,km water depth)}, a shallow water model \new{(400\,m water
+depth)}, and a land model. The models consist of air (upper halfspace), a water
+layer in the first two examples, and a subsurface halfspace. Source depth is
+1990\,m, 10\,m, and 0.5\,m in the deep, shallow, and land case, respectively.
+Receiver depth is 2000\,m, 100\,m, and 0.8\,m. The subsurface halfspace
+resistivity varies from 1 to 10, 100, and 1000\,$\Omega\,$m from the left to
+the right column. The error plots cover offsets from 50\,m to 20\,km on the
+x-axis, and 0.01\,Hz to 10\,Hz on the y-axis. It can be seen in the result that
+the filter is sufficiently precise for all practical CSEM cases, hence has
+generally an error far below 1\,\% ($10^{-2}$) in all cases. A relative noise
+of less than 1\,\% is generally considered really good for real data. The
+exceptions are in the shallow water case at large offsets with relatively high
+frequencies, e.g., 10\,km offset with 8\,Hz; this zone has a very high error
+for subsurface resistivities of 1\,$\Omega\,$m and 10\,$\Omega\,$m (yellow
+zones). However, this is due to the fact that the amplitudes of the signal for
+these offsets and frequencies are in the order of $10^{-25}\,$V/m. The grey
+contour lines in the plot indicate the power of the amplitude of the signal.
 %
 \plot*{error}{width=\textwidth}{Relative error plots comparing the DLF
   (\emph{Wer201}) with QWE for the three cases deep water (top row), shallow
@@ -679,9 +669,9 @@ $10^{-25}\,$V/m. \new{The grey contour lines in the plot indicate the power of
   practical CSEM applications. The exception is in the shallow water case for
   $\rho = 1\,\Omega\,$m and $10\,\Omega\,$m for large offsets and high
   frequencies (yellow zones). However, the amplitudes in these regions are in
-  the order of $10^{-25}\,$V/m, and therefore \old{far}\new{several orders of
-  magnitude} below the noise level\new{s of current EM instrument systems}.
-  \new{Contour lines show the power of the amplitude of the signal.}}
+  the order of $10^{-25}\,$V/m, and therefore several orders of
+  magnitude below the noise levels of current EM instrument systems.
+  Contour lines show the power of the amplitude of the signal.}
 %
 
 Another error test is shown in Figure~\ref{fig:skindepth1}. It shows in (a) the
@@ -757,19 +747,19 @@ The lagged convolution version of DLF and the splined version of QWE were used
 in this comparison.
 %
 \plot*{GPR}{width=\textwidth}{GPR example for the model given in (a) using
-  \texttt{empymod} with (b) the adaptive quadrature (QUAD) or with (c) a
-  2001\,pt digital linear filter (b). QUAD took about 11\,h 27\,min to
+  \texttt{empymod} with (b) \old{the} adaptive quadrature (QUAD) or with (c) a
+  2001\,pt digital linear filter\old{ (b)}. QUAD took about 11\,h 27\,min to
   calculate, whereas DLF took 2\,min 10\,s in parallel on 4 nodes, hence under
   9\,min in total.}
 %
 
-Figure~\ref{fig:ftGPR} shows in (a)-(c) the real part of the frequency domain
-results and in (d)-(f) the time domain results for offsets of 0.2\,m, 2.0\,m,
-and 3.0\,m.
+Figure~\ref{fig:ftGPR} shows in (a)-(c) the real \new{and imaginary}
+part\new{s} of the frequency domain results and in (d)-(f) the time domain
+results for offsets of 0.2\,m, 2.0\,m, and 3.0\,m.
 %
-\plot*{ftGPR}{width=\textwidth}{The real-part frequency-domain and the
-  time-domain responses for offsets of (a/d) 0.2\,m, (b/e) 2.0\,m, and (c/f)
-  3.0\,m.}
+\plot*{ftGPR}{width=\textwidth}{The real\old{-part} \new{and imaginary parts of
+the} frequency-domain \new{(a-c)} and the time-domain \new{(d-f)} responses for
+offsets of (a/d) 0.2\,m, (b/e) 2.0\,m, and (c/f) 3.0\,m.}
 %
 
 The 2001\,pt filter was derived with the fullspace solution of a medium which
@@ -803,10 +793,8 @@ The presented, free and open-source code \texttt{fdesign} can be used to design
 digital linear filters for the Hankel and Fourier transforms (and more
 generally for any linear transform) using either analytical transform pairs or
 1D subsurface models together with the EM-modeler \texttt{empymod}. The code is
-available from GitHub \old{in the add-on repository}\new{as part} of
-\texttt{empymod}\old{, called \texttt{empyscripts},}\new{; the version
-  corresponding to this publication is \texttt{v1.7.1.}}\old{ from version
-  0.2.0 onwards}.
+available from GitHub as part of \texttt{empymod}; the version corresponding to
+this publication is \texttt{\new{v1.8.1}\old{v1.7.1.}}.
 
 The presented 201\,pt filter achieves more precise results in the three
 presented CSEM cases than other filters, and is included in \texttt{empymod}
@@ -890,7 +878,7 @@ Bernabini, M., and E. Cardarelli,  1978, The use of filtered {B}essel functions
 
 \bibitem[Bichara and Lakshmanan, 1976]{GP.76.Bichara}
 Bichara, M., and J. Lakshmanan,  1976, Fast automatic processing of resistivity
-  soundings*: Geophysical Prospecting, {\bf 24}, 354--370.
+soundings\old{*}: Geophysical Prospecting, {\bf 24}, 354--370.
 \newblock (\href{https://doi.org/10.1111/j.1365-2478.1976.tb00932.x}{doi:
   10.1111/j.1365-2478.1976.tb00932.x}).
 
@@ -947,9 +935,9 @@ Das, U.~C., and S.~K. Verma,  1980, Digital linear filter for computing type
 
 \bibitem[Das and Verma, 1981b]{GXP.81.Das}
 --------, 1981b, The versatility of digital linear filters used in computing
-  resistivity and em sounding curves: Geoexploration, {\bf 18}, 297--310.
-\newblock (\href{https://doi.org/10.1016/0016-7142(81)90059-4}{doi:
-  10.1016/0016-7142(81)90059-4}).
+resistivity and \old{em}\new{EM} sounding curves: Geoexploration, {\bf 18},
+297--310. \newblock (\href{https://doi.org/10.1016/0016-7142(81)90059-4}{doi:
+10.1016/0016-7142(81)90059-4}).
 
 \bibitem[Das and Verma, 1982]{GJI.82.Das}
 --------, 1982, Electromagnetic response of an arbitrarily shaped
