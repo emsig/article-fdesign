@@ -1,8 +1,8 @@
 % \documentclass[manuscript]{geophysics}
-\documentclass[paper,twocolumn,twoside]{geophysics}
+% \documentclass[paper,twocolumn,twoside]{geophysics}
 % \documentclass[paper]{geophysics}
 % \documentclass[paper, revised]{geophysics}
-% \documentclass[manuscript,revised]{geophysics}
+\documentclass[manuscript,revised]{geophysics}
 
 % Additional packages to geophysics.cls
 \usepackage[USenglish]{babel}
@@ -494,8 +494,8 @@ and Fourier transforms. As there is no difference in the procedure of the two,
 this should be sufficient to demonstrate the algorithm.
 
 \subsection{Design}
-Figures~\ref{fig:Figure-2} and~\ref{fig:Figure-3} show the solution spaces of
-seven consecutive inversion runs using the following theoretical transform
+Figures~\ref{fig:Figure-2-bw} and~\ref{fig:Figure-3-bw} show the solution spaces
+of seven consecutive inversion runs using the following theoretical transform
 pairs \citep[e.g.,][]{USGS.75.Anderson},
 %
 \begin{align}
@@ -517,9 +517,9 @@ $\log_{10}[1/\min(b)] + 1$, where $b$ are the filter abscissae as given in
 equation~\ref{eq:base}. This is accomplished in \texttt{fdesign} by setting
 parameter $r_\mr{def} = (1, 1, 2)$.
 
-Figure~\ref{fig:Figure-2} shows three different inversion runs for $N=101$,
-201, and 401 for a wide range of spacing and shift values.
-From this one has to decide for a filter length. Longer filters tend to give
+Figure~\ref{fig:Figure-2-bw} shows three different inversion runs for $N=101$,
+201, and 401 for a wide range of spacing and shift values. From this one has to
+decide for a filter length. Longer filters tend to give
 more precise results, but their transform is computationally more expensive as
 more values have to be evaluated. The length of the filter does not has to be
 an odd number, but many published filters do have an odd number of
@@ -529,36 +529,37 @@ $-(N-1)/2$ to $(N-1)/2$. However, this is only true if the shift value
 $\delta = 0$. If it differs from zero then there is no advantage in having an
 odd point filter.
 %
-\plot*{Figure-2}{width=\textwidth}{%
+\plot*{Figure-2-bw}{width=\textwidth}{%
   Test of different filter lengths. Filter length is a trade-off between
     precision and speed, as shorter filters are faster but less precise, and
   longer filters are more precise but computationally more expensive. The red
-  square in subplot (b) is the starting point of Figure~\ref{fig:Figure-3}.}%
+  square in subplot (b) is the starting point of
+  Figure~\ref{fig:Figure-3-bw}.}%
 %
 
-Figure~\ref{fig:Figure-3} shows four consecutive inversion runs for $N=201$,
+Figure~\ref{fig:Figure-3-bw} shows four consecutive inversion runs for $N=201$,
 where each run is a focus on a subsection of the previous run, indicated by the
-red square. From the low resolution overview runs (a) and (b) it looks like
-this is a standard, straight-forward minimization problem. However, from the
-more detailed results in (c) and (d) it becomes obvious that it is a
+\old{red} square. From the low resolution overview runs (a) and (b) it looks
+like this is a standard, straight-forward minimization problem. However, from
+the more detailed results in (c) and (d) it becomes obvious that it is a
 minimization problem that has to be solved stochastically, as there are
 solutions with 2 orders of magnitude difference apparently randomly next to
 each other.
 %
-\plot*{Figure-3}{width=\textwidth}{%
+\plot*{Figure-3-bw}{width=\textwidth}{%
   Solution spaces of four consecutive inversion runs for a 201\,pt filter. Each
   consecutive run zooms into a portion of the previous solution space,
-  indicated by the red square. The more in detail we obtain the solution space,
-  the more random appears to be the distribution.}%
+  indicated by the \old{red} square. The more in detail we obtain the solution
+  space, the more random appears to be the distribution.}%
 %
 
-Figure~\ref{fig:Figure-4} shows in (a) the filter values for $J_0$ and $J_1$ of
-the best 201 \old{point}\new{pt} filter obtained this way, and in (b) its
+Figure~\ref{fig:Figure-4-bw} shows in (a) the filter values for $J_0$ and $J_1$
+of the best 201 \old{point}\new{pt} filter obtained this way, and in (b) its
 right-hand-side solution. The black dots indicate negative values, from which
 it can \new{be} seen that adjacent values are often alternating between
 positive and negative contributions.
 %
-\plot*{Figure-4}{width=.9\textwidth}{(a) Filter values of the best obtained
+\plot*{Figure-4-bw}{width=.9\textwidth}{(a) Filter values of the best obtained
   201\,pt filter with the corresponding check of quality in (b). Black points
   indicate negative values, which shows that adjacent values have often
   opposite signs.}
@@ -567,8 +568,8 @@ positive and negative contributions.
 Designing filters is to a large extent trial and error. All input variables
 influence the outcome, and often an even better filter is found by sheer luck
 of choosing the right starting parameters, as can be seen in
-Figure~\ref{fig:Figure-4} (h). However, once you are in this zone every filter
-is a very good filter. Each of the input parameters has an effect on the
+Figure~\ref{fig:Figure-4-bw} (h). However, once you are in this zone every
+filter is a very good filter. Each of the input parameters has an effect on the
 outcome. It also depends heavily on the transform pairs $f_\mr{I;C}$; functions
 that decay rapidly are generally better, as noted by earlier authors
 \citep[e.g.][]{USGS.75.Anderson}. It also depends on the filter length, and
@@ -640,7 +641,7 @@ It is very important to note again that other scenarios might yield very
 different error plots. Although the new 201\,pt filter proves to be very
 accurate for these three models, it might not be the best filter in other
 cases. To verify the applicability of the filter we run two different tests
-over a wide range of scenarios. Figure~\ref{fig:error} shows the relative
+over a wide range of scenarios. Figure~\ref{fig:Figure-7} shows the relative
 errors of DLF using the filter \emph{Wer201} compared to QWE for a deep water
 model \new{(2\,km water depth)}, a shallow water model \new{(400\,m water
 depth)}, and a land model. The models consist of air (upper halfspace), a water
@@ -660,7 +661,7 @@ zones). However, this is due to the fact that the amplitudes of the signal for
 these offsets and frequencies are in the order of $10^{-25}\,$V/m. The grey
 contour lines in the plot indicate the power of the amplitude of the signal.
 %
-\plot*{error}{width=\textwidth}{Relative error plots comparing the DLF
+\plot*{Figure-7}{width=\textwidth}{Relative error plots comparing the DLF
   (\emph{Wer201}) with QWE for the three cases deep water (top row), shallow
   water (middle row), and land (bottom row). The subsurface halfspace
   resistivity varies from 1 to 1000\,$\Omega\,$m from the left column to the
@@ -674,7 +675,7 @@ contour lines in the plot indicate the power of the amplitude of the signal.
   Contour lines show the power of the amplitude of the signal.}
 %
 
-Another error test is shown in Figure~\ref{fig:skindepth1}. It shows in (a) the
+Another error test is shown in Figure~\ref{fig:Figure-8}. It shows in (a) the
 amplitude of the analytical fullspace solution for a wide range of
 resistivities and frequencies: $\rho=$ $10^{-10}\,\Omega\,$m to
 $10^{10}\,\Omega\,$m, and $f =10^{-10}$\,Hz to $10^{14}$\,Hz. In this case, the
@@ -701,7 +702,7 @@ phenomena become dominant. The red line indicates where $\omega\varepsilon\rho
 filter can be used for all cases that are in the quasi static region, but not
 outside.
 %
-\plot*{skindepth1}{width=.8\textwidth}{(a) Amplitude of the analytical
+\plot*{Figure-8}{width=.8\textwidth}{(a) Amplitude of the analytical
   fullspace solution for a wide range of resistivities and frequencies. The
   contour lines show the power of the offset used for the calculation, where
   the offset is set to the skin depth. (b) Relative error of the DLF compared
@@ -719,7 +720,7 @@ accuracy for the desired range of data and model parameters.
 
 \subsection{Ground-penetrating radar}
 
-Figure~\ref{fig:GPR} shows the GPR example as calculated in
+Figure~\ref{fig:Figure-9} shows the GPR example as calculated in
 \cite{GEO.15.Hunziker} and \cite{GEO.17.Werthmuller}; the model parameters are
 given in subplot (a). The filter used for this example for the Hankel transform
 is a 2001\,pt filter, derived with the fullspace solution with $f=500\,$MHz for
@@ -746,33 +747,34 @@ calculate.
 The lagged convolution version of DLF and the splined version of QWE were used
 in this comparison.
 %
-\plot*{GPR}{width=\textwidth}{GPR example for the model given in (a) using
+\plot*{Figure-9}{width=\textwidth}{GPR example for the model given in (a) using
   \texttt{empymod} with (b) \old{the} adaptive quadrature (QUAD) or with (c) a
   2001\,pt digital linear filter\old{ (b)}. QUAD took about 11\,h 27\,min to
   calculate, whereas DLF took 2\,min 10\,s in parallel on 4 nodes, hence under
   9\,min in total.}
 %
 
-Figure~\ref{fig:ftGPR} shows in (a)-(c) the real \new{and imaginary}
+Figure~\ref{fig:Figure-10-bw} shows in (a)-(c) the real \new{and imaginary}
 part\new{s} of the frequency domain results and in (d)-(f) the time domain
 results for offsets of 0.2\,m, 2.0\,m, and 3.0\,m.
 %
-\plot*{ftGPR}{width=\textwidth}{The real\old{-part} \new{and imaginary parts of
-the} frequency-domain \new{(a-c)} and the time-domain \new{(d-f)} responses for
-offsets of (a/d) 0.2\,m, (b/e) 2.0\,m, and (c/f) 3.0\,m.}
+\plot*{Figure-10-bw}{width=\textwidth}{The real\old{-part} \new{and imaginary
+  parts of the} frequency-domain \new{(a-c)} and the time-domain \new{(d-f)}
+  responses for \new{horizontal} offsets of (a/d) 0.2\,m, (b/e) 2.0\,m, and
+  (c/f) 3.0\,m.}
 %
 
 The 2001\,pt filter was derived with the fullspace solution of a medium which
 is very similar to the layer in which source and receiver reside in our GPR
 example. To show that this filter can also be applied to different layer
 parameters we run a test where we swapped layers one and two of the model in
-Figure~\ref{fig:GPR} (a). The resulting real and imaginary parts for the
-offsets 0.2\,m, 2.0\,m, and 3.0\,m are given in Figure~\ref{fig:ftGPR2nd}.
+Figure~\ref{fig:Figure-9} (a). The resulting real and imaginary parts for the
+offsets 0.2\,m, 2.0\,m, and 3.0\,m are given in Figure~\ref{fig:Figure-11-bw}.
 %
-\plot*{ftGPR2nd}{width=\textwidth}{The real and imaginary parts of the
-  frequency-domain response for the model given in Figure~\ref{fig:GPR} (a)
-  with swapped first and second layers for offsets of (a) 0.2\,m, (b) 2.0\,m,
-  and (c) 3.0\,m.}
+\plot*{Figure-11-bw}{width=\textwidth}{The real and imaginary parts of the
+  frequency-domain response for the model given in Figure~\ref{fig:Figure-9}
+  (a) with swapped first and second layers for \new{horizontal} offsets of (a)
+  0.2\,m, (b) 2.0\,m, and (c) 3.0\,m.}
 %
 
 These examples show clearly that the filter method can indeed be applied to

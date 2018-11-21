@@ -18,3 +18,5 @@ figures/Figure_*.tif
 *.dat
 *.dir
 *.bak
+*.eps
+*.png
