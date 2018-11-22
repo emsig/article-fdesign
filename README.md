@@ -2,8 +2,8 @@
 
 > Werthmüller, D., K. Key, and E. Slob, 2018, A tool for designing digital
 > filters for the Hankel and Fourier transforms in potential, diffusive, and
-> wavefield modeling: Submitted to Geophysics.
-
+> wavefield modeling: Geophysics, ??(?), ??-??; DOI:
+> [10.1190/geo2018-0069.2](http://doi.org/10.1190/geo2018-0069.2).
 
 ## Manuscript for Geophysics paper
 
@@ -60,7 +60,7 @@ folder `notebooks/empymod/scripts` in the zip-file or in the folder
 
 ## Requirements
 
-Required are Python version 3.4 or higher and the modules `NumPy` and `SciPy`
+Required are Python version 3.5 or higher and the modules `NumPy` and `SciPy`
 to use `fdesign`. To reproduce the figures with the provided notebooks the
 modules `IPython`, `Jupyter`, and `matplotlib` are required additionally.
 
